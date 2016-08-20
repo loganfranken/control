@@ -8,6 +8,7 @@ function Ship(x, y) {
 
   this.x = x;
   this.y = y;
+  this.rotationDegree = 0;
 
 }
 
@@ -17,11 +18,40 @@ function Ship(x, y) {
  */
 Ship.prototype.draw = function(context) {
 
-  context.beginPath();
-  context.fillStyle = 'rgb(255, 255, 255)';
-  context.moveTo(this.x, this.y);
-  context.lineTo(this.x - 10, this.y + 10);
-  context.lineTo(this.x + 10, this.y + 10);
-  context.fill();
+  context.save();
 
+  context.translate(this.x, this.y + 10);
+  context.rotate(this.rotationDegree * Math.PI / 180);
+
+  context.beginPath();
+  context.moveTo(0, 0);
+  context.fillStyle = 'rgb(255, 255, 255)';
+  context.lineTo(-10, 20);
+  context.lineTo(10, 20);
+
+  context.fill();
+  context.restore();
+
+};
+
+Ship.prototype.moveForward = function() {
+
+  this.y -= Math.cos(this.rotationDegree * Math.PI / 180);
+  this.x += Math.sin(this.rotationDegree * Math.PI / 180);
+
+};
+
+Ship.prototype.moveBackward = function() {
+
+  this.y += Math.cos(this.rotationDegree * Math.PI / 180);
+  this.x -= Math.sin(this.rotationDegree * Math.PI / 180);
+
+};
+
+Ship.prototype.rotateClockwise = function() {
+  this.rotationDegree += 1;
+};
+
+Ship.prototype.rotateCounterClockwise = function() {
+  this.rotationDegree -= 1;
 };
