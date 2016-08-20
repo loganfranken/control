@@ -7,6 +7,8 @@ function Game(canvas, messageLogElement, replyButtonElement)
 {
   this.canvas = canvas;
   this.context = canvas.getContext("2d");
+
+  this.player = new Ship(100, 100);
 }
 
 /**
@@ -21,6 +23,7 @@ Game.prototype.update = function()
  */
 Game.prototype.draw = function()
 {
+  this.player.draw(this.context);
 }
 
 /**
