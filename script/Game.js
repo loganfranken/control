@@ -19,6 +19,7 @@ function Game(canvas)
   this.isGlitchPressed = false;
 
   this.player = new Ship(300, 300);
+  this.bullets = [];
 }
 
 /**
@@ -26,6 +27,8 @@ function Game(canvas)
  */
 Game.prototype.update = function()
 {
+  // Handle player input
+
   if(this.isUpPressed)
   {
     this.player.moveForward();
@@ -45,6 +48,16 @@ Game.prototype.update = function()
   {
     this.player.rotateCounterClockwise();
   }
+
+  if(this.isShootPressed)
+  {
+    this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree));
+  }
+
+  // Update bullet movement
+  this.bullets.forEach(function(bullet) {
+    bullet.update();
+  });
 }
 
 /**
@@ -52,11 +65,18 @@ Game.prototype.update = function()
  */
 Game.prototype.draw = function()
 {
+  var self = this;
+
   // Clear the canvas
-  this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+  self.context.clearRect(0, 0, self.canvasWidth, self.canvasHeight);
 
   // Draw the player
-  this.player.draw(this.context);
+  self.player.draw(self.context);
+
+  // Draw the bullets
+  self.bullets.forEach(function(bullet) {
+    bullet.draw(self.context);
+  });
 }
 
 /**

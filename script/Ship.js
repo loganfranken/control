@@ -14,7 +14,7 @@ function Ship(x, y) {
 
 /**
  * Renders the ship
- * @param {CanvasRenderingContext2D}  context - 2D rendering context to use when rendering the block
+ * @param {CanvasRenderingContext2D}  context - 2D rendering context to use when rendering the ship
  */
 Ship.prototype.draw = function(context) {
 
