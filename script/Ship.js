@@ -18,10 +18,13 @@ function Ship(x, y) {
   this.currentDriftY = 0;
   this.currentDriftX = 0;
 
-  this.speed = 2;
+  this.maxSpeed = 2;
   this.rotationSpeed = 1;
+  this.drift = 0.01;
+  this.acceleration = 0.02;
+  this.accelerationDecay = 0.001;
 
-  this.acceleration = 0.01;
+  this.currentSpeed = 0;
 
   this.height = 30;
   this.width = 20;
@@ -64,8 +67,21 @@ Ship.prototype.draw = function(context) {
  */
 Ship.prototype.update = function() {
 
+  // Apply drift
   this.y += this.currentDriftY;
   this.x += this.currentDriftX;
+
+  // Normalize speed
+  if(this.currentSpeed > this.maxSpeed)
+  {
+    this.currentSpeed = this.maxSpeed;
+  }
+
+  // Decay acceleration
+  if(this.currentSpeed > 0)
+  {
+    this.currentSpeed -= this.accelerationDecay;
+  }
 
 };
 
@@ -77,21 +93,17 @@ Ship.prototype.moveForward = function() {
   // Move the ship forward
   this.y -= this.currentVelocityY;
   this.x += this.currentVelocityX;
+  this.currentSpeed += this.acceleration;
 
-  // Apply drift
-  this.currentDriftY -= (this.currentVelocityY * this.acceleration);
-  this.currentDriftX += (this.currentVelocityX * this.acceleration);
+  // Update drift
+  this.currentDriftY -= (this.currentVelocityY * this.drift);
+  this.currentDriftX += (this.currentVelocityX * this.drift);
 
-  // Normalize drift
-  if(this.currentDriftY > this.speed)
-  {
-    this.currentDriftY = this.speed;
-  }
+  // Cap drift
+  this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
+  this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
 
-  if(this.currentDriftX > this.speed)
-  {
-    this.currentDriftX = this.speed;
-  }
+  this.updateRotation(0);
 
 };
 
@@ -103,21 +115,17 @@ Ship.prototype.moveBackward = function() {
   // Move the ship backward
   this.y += this.currentVelocityY;
   this.x -= this.currentVelocityX;
+  this.currentSpeed += this.acceleration;
 
-  // Apply drift
-  this.currentDriftY += (this.currentVelocityY * this.acceleration);
-  this.currentDriftX -= (this.currentVelocityX * this.acceleration);
+  // Update drift
+  this.currentDriftY += (this.currentVelocityY * this.drift);
+  this.currentDriftX -= (this.currentVelocityX * this.drift);
 
-  // Normalize drift
-  if(this.currentDriftY > this.speed)
-  {
-    this.currentDriftY = this.speed;
-  }
+  // Cap drift
+  this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
+  this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
 
-  if(this.currentDriftX > this.speed)
-  {
-    this.currentDriftX = this.speed;
-  }
+  this.updateRotation(0);
 
 };
 
@@ -144,8 +152,8 @@ Ship.prototype.updateRotation = function(direction) {
   this.rotationDegree += (direction * this.rotationSpeed);
 
   this.currentRadians = Utility.toRadians(this.rotationDegree);
-  this.currentVelocityY = this.speed * Math.cos(this.currentRadians);
-  this.currentVelocityX = this.speed * Math.sin(this.currentRadians);
+  this.currentVelocityY = this.currentSpeed * Math.cos(this.currentRadians);
+  this.currentVelocityX = this.currentSpeed * Math.sin(this.currentRadians);
 
 };
 
