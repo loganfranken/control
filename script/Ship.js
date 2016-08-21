@@ -1,8 +1,8 @@
 /**
  * A ship
  * @constructor
- * @param {integer} x       - X-coordinate of the ship
- * @param {integer} y       - Y-cooridnate of the ship
+ * @param {integer} x - X-coordinate of the ship
+ * @param {integer} y - Y-cooridnate of the ship
  */
 function Ship(x, y) {
 
@@ -54,10 +54,15 @@ Ship.prototype.draw = function(context) {
 
 };
 
+/**
+ * Updates the ship's state
+ */
 Ship.prototype.update = function() {
-
 };
 
+/**
+ * Moves the ship forward
+ */
 Ship.prototype.moveForward = function() {
 
   this.y -= this.currentVelocityY;
@@ -65,6 +70,9 @@ Ship.prototype.moveForward = function() {
 
 };
 
+/**
+ * Moves the ship backward
+ */
 Ship.prototype.moveBackward = function() {
 
   this.y += this.currentVelocityY;
@@ -72,14 +80,24 @@ Ship.prototype.moveBackward = function() {
 
 };
 
+/**
+ * Rotates the ship clockwise
+ */
 Ship.prototype.rotateClockwise = function() {
   this.updateRotation(1);
 };
 
+/**
+ * Moves the ship counterclockwise
+ */
 Ship.prototype.rotateCounterClockwise = function() {
   this.updateRotation(-1);
 };
 
+/**
+ * Updates the ship's rotation
+ * @param {integer} direction - Direction of the rotation (0 = no rotation, 1 = clockwise, -1 = counterclockwise)
+ */
 Ship.prototype.updateRotation = function(direction) {
 
   this.rotationDegree += (direction * this.rotationSpeed);
@@ -90,6 +108,11 @@ Ship.prototype.updateRotation = function(direction) {
 
 };
 
+/**
+ * Determines whether or not the ship contains the given point
+ * @param {integer} x - X-coordinate to test
+ * @param {integer} y - Y-coordinate to test
+ */
 Ship.prototype.contains = function(x, y) {
-  return (x > this.x - 10) && (x < this.x + 10) && (y > this.y - 10) && (y < this.y + 10);
+  return (x > this.x - this.width) && (x < this.x + this.width) && (y > this.y - this.height) && (y < this.y + this.height);
 };
