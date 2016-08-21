@@ -8,7 +8,11 @@ function Ship(x, y) {
 
   this.x = x;
   this.y = y;
+
   this.rotationDegree = 0;
+
+  this.speed = 2;
+  this.rotationSpeed = 1;
 
 }
 
@@ -40,24 +44,24 @@ Ship.prototype.update = function() {
 
 Ship.prototype.moveForward = function() {
 
-  this.y -= Math.cos(this.rotationDegree * Math.PI / 180);
-  this.x += Math.sin(this.rotationDegree * Math.PI / 180);
+  this.y -= this.speed * Math.cos(this.rotationDegree * Math.PI / 180);
+  this.x += this.speed * Math.sin(this.rotationDegree * Math.PI / 180);
 
 };
 
 Ship.prototype.moveBackward = function() {
 
-  this.y += Math.cos(this.rotationDegree * Math.PI / 180);
-  this.x -= Math.sin(this.rotationDegree * Math.PI / 180);
+  this.y += this.speed * Math.cos(this.rotationDegree * Math.PI / 180);
+  this.x -= this.speed * Math.sin(this.rotationDegree * Math.PI / 180);
 
 };
 
 Ship.prototype.rotateClockwise = function() {
-  this.rotationDegree += 1;
+  this.rotationDegree += this.rotationSpeed;
 };
 
 Ship.prototype.rotateCounterClockwise = function() {
-  this.rotationDegree -= 1;
+  this.rotationDegree -= this.rotationSpeed;
 };
 
 Ship.prototype.contains = function(x, y) {
