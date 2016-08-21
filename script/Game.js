@@ -18,6 +18,8 @@ function Game(canvas)
   this.isShootPressed = false;
   this.isGlitchPressed = false;
 
+  this.hasGlitched = false;
+
   this.player = new Ship(300, 300);
   this.bullets = [];
   this.enemies = [];
@@ -55,34 +57,71 @@ Game.prototype.update = function()
     this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree));
   }
 
-  // Update entities
+  // Update enemies
+  this.enemies.forEach(function(enemy) {
 
-  for(var i=0; i<this.bullets.length; i++)
-  {
-    var bullet = this.bullets[i];
-
-    if(bullet == null)
+    if(enemy === null)
     {
-      continue;
+      return;
+    }
+
+    enemy.update();
+
+  });
+
+  // Update bullets
+  this.bullets.forEach(function(bullet) {
+
+    if(bullet === null)
+    {
+      return;
     }
 
     bullet.update();
 
-    for(var j=0; j<this.enemies.length; j++)
-    {
-      var enemy = this.enemies[j];
+  });
 
-      if(enemy == null)
+  // Update player/enemy interactions
+  for(var i=0; i<this.enemies.length; i++)
+  {
+    var enemy = this.enemies[i];
+
+    if(enemy === null)
+    {
+      continue;
+    }
+
+    if(!this.hasGlitched && this.isGlitchPressed && enemy.contains(this.player.x, this.player.y))
+    {
+      this.enemies.push(this.player);
+      this.player = enemy;
+      this.hasGlitched = true;
+    }
+  }
+
+  // Update bullet/enemy interactions
+  for(var i=0; i<this.enemies.length; i++)
+  {
+    var enemy = this.enemies[i];
+
+    if(enemy === null)
+    {
+      continue;
+    }
+
+    for(var j=0; j<this.bullets.length; j++)
+    {
+      var bullet = this.bullets[j];
+
+      if(bullet === null)
       {
         continue;
       }
 
-      enemy.update();
-
       if(enemy.contains(bullet.x, bullet.y))
       {
-        this.bullets[i] = null;
-        this.enemies[j] = null;
+        this.enemies[i] = null;
+        this.bullets[j] = null;
       }
     }
   }
