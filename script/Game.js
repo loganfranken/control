@@ -57,6 +57,8 @@ Game.prototype.update = function()
     this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree));
   }
 
+  this.player.update();
+
   // Update enemies
   this.enemies.forEach(function(enemy) {
 

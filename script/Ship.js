@@ -15,8 +15,13 @@ function Ship(x, y) {
   this.currentVelocityY = 0;
   this.currentVelocityX = 0;
 
+  this.currentDriftY = 0;
+  this.currentDriftX = 0;
+
   this.speed = 2;
   this.rotationSpeed = 1;
+
+  this.acceleration = 0.01;
 
   this.height = 30;
   this.width = 20;
@@ -58,6 +63,10 @@ Ship.prototype.draw = function(context) {
  * Updates the ship's state
  */
 Ship.prototype.update = function() {
+
+  this.y += this.currentDriftY;
+  this.x += this.currentDriftX;
+
 };
 
 /**
@@ -65,8 +74,24 @@ Ship.prototype.update = function() {
  */
 Ship.prototype.moveForward = function() {
 
+  // Move the ship forward
   this.y -= this.currentVelocityY;
   this.x += this.currentVelocityX;
+
+  // Apply drift
+  this.currentDriftY -= (this.currentVelocityY * this.acceleration);
+  this.currentDriftX += (this.currentVelocityX * this.acceleration);
+
+  // Normalize drift
+  if(this.currentDriftY > this.speed)
+  {
+    this.currentDriftY = this.speed;
+  }
+
+  if(this.currentDriftX > this.speed)
+  {
+    this.currentDriftX = this.speed;
+  }
 
 };
 
@@ -75,8 +100,24 @@ Ship.prototype.moveForward = function() {
  */
 Ship.prototype.moveBackward = function() {
 
+  // Move the ship backward
   this.y += this.currentVelocityY;
   this.x -= this.currentVelocityX;
+
+  // Apply drift
+  this.currentDriftY += (this.currentVelocityY * this.acceleration);
+  this.currentDriftX -= (this.currentVelocityX * this.acceleration);
+
+  // Normalize drift
+  if(this.currentDriftY > this.speed)
+  {
+    this.currentDriftY = this.speed;
+  }
+
+  if(this.currentDriftX > this.speed)
+  {
+    this.currentDriftX = this.speed;
+  }
 
 };
 
