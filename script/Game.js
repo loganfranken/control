@@ -20,6 +20,7 @@ function Game(canvas)
 
   this.player = new Ship(300, 300);
   this.bullets = [];
+  this.enemies = [];
 }
 
 /**
@@ -54,10 +55,38 @@ Game.prototype.update = function()
     this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree));
   }
 
-  // Update bullet movement
-  this.bullets.forEach(function(bullet) {
+  // Update entities
+
+  for(var i=0; i<this.bullets.length; i++)
+  {
+    var bullet = this.bullets[i];
+
+    if(bullet == null)
+    {
+      continue;
+    }
+
     bullet.update();
-  });
+
+    for(var j=0; j<this.enemies.length; j++)
+    {
+      var enemy = this.enemies[j];
+
+      if(enemy == null)
+      {
+        continue;
+      }
+
+      enemy.update();
+
+      if(enemy.contains(bullet.x, bullet.y))
+      {
+        this.bullets[i] = null;
+        this.enemies[j] = null;
+      }
+    }
+  }
+
 }
 
 /**
@@ -75,7 +104,24 @@ Game.prototype.draw = function()
 
   // Draw the bullets
   self.bullets.forEach(function(bullet) {
+
+    if(bullet == null)
+    {
+      return;
+    }
+
     bullet.draw(self.context);
+  });
+
+  // Draw the enemies
+  self.enemies.forEach(function(enemy) {
+
+    if(enemy == null)
+    {
+      return;
+    }
+
+    enemy.draw(self.context);
   });
 }
 
@@ -130,6 +176,10 @@ Game.prototype.start = function()
     self.update();
     self.draw();
   }
+
+  // Add mock enemies for testing
+  this.enemies.push(new Ship(50, 50));
+  this.enemies.push(new Ship(100, 100));
 
   window.setInterval(loop, 10);
   loop();

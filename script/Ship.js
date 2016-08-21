@@ -34,6 +34,10 @@ Ship.prototype.draw = function(context) {
 
 };
 
+Ship.prototype.update = function() {
+
+};
+
 Ship.prototype.moveForward = function() {
 
   this.y -= Math.cos(this.rotationDegree * Math.PI / 180);
@@ -54,4 +58,8 @@ Ship.prototype.rotateClockwise = function() {
 
 Ship.prototype.rotateCounterClockwise = function() {
   this.rotationDegree -= 1;
+};
+
+Ship.prototype.contains = function(x, y) {
+  return (x > this.x - 10) && (x < this.x + 10) && (y > this.y - 10) && (y < this.y + 10);
 };
