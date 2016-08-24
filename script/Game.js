@@ -42,6 +42,11 @@ Game.prototype.update = function()
     this.player.moveBackward();
   }
 
+  if(!this.isUpPressed && !this.isDownPressed)
+  {
+    this.player.currentSpeed = 0;
+  }
+
   if(this.isRightPressed)
   {
     this.player.rotateClockwise();

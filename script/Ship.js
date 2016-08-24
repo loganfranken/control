@@ -18,11 +18,10 @@ function Ship(x, y) {
   this.currentDriftY = 0;
   this.currentDriftX = 0;
 
-  this.maxSpeed = 2;
+  this.maxSpeed = 3;
   this.rotationSpeed = 1;
   this.drift = 0.01;
-  this.acceleration = 0.02;
-  this.accelerationDecay = 0.001;
+  this.acceleration = 0.01;
 
   this.currentSpeed = 0;
 
@@ -33,7 +32,7 @@ function Ship(x, y) {
   this.color = 'rgb(255, 255, 255)';
 
   // Initialize the ship
-  this.updateRotation(0);
+  this.updateMovement(0);
 
 }
 
@@ -72,15 +71,14 @@ Ship.prototype.update = function() {
   this.x += this.currentDriftX;
 
   // Normalize speed
-  if(this.currentSpeed > this.maxSpeed)
+  if(this.currentSpeed >= this.maxSpeed)
   {
     this.currentSpeed = this.maxSpeed;
   }
 
-  // Decay acceleration
-  if(this.currentSpeed > 0)
+  if(this.currentSpeed <= 0)
   {
-    this.currentSpeed -= this.accelerationDecay;
+    this.currentSpeed = 0;
   }
 
 };
@@ -103,7 +101,7 @@ Ship.prototype.moveForward = function() {
   this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
   this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
 
-  this.updateRotation(0);
+  this.updateMovement(0);
 
 };
 
@@ -125,7 +123,7 @@ Ship.prototype.moveBackward = function() {
   this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
   this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
 
-  this.updateRotation(0);
+  this.updateMovement(0);
 
 };
 
@@ -133,21 +131,21 @@ Ship.prototype.moveBackward = function() {
  * Rotates the ship clockwise
  */
 Ship.prototype.rotateClockwise = function() {
-  this.updateRotation(1);
+  this.updateMovement(1);
 };
 
 /**
  * Moves the ship counterclockwise
  */
 Ship.prototype.rotateCounterClockwise = function() {
-  this.updateRotation(-1);
+  this.updateMovement(-1);
 };
 
 /**
- * Updates the ship's rotation
+ * Updates the ship's movement
  * @param {integer} direction - Direction of the rotation (0 = no rotation, 1 = clockwise, -1 = counterclockwise)
  */
-Ship.prototype.updateRotation = function(direction) {
+Ship.prototype.updateMovement = function(direction) {
 
   this.rotationDegree += (direction * this.rotationSpeed);
 
