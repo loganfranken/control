@@ -133,6 +133,22 @@ Game.prototype.update = function()
     }
   }
 
+  // Update bullet death
+  for(var i=0; i<this.bullets.length; i++)
+  {
+    var bullet = this.bullets[i];
+
+    if(bullet === null)
+    {
+      continue;
+    }
+
+    if(bullet.range <= 0)
+    {
+      this.bullets[i] = null;
+    }
+  }
+
 }
 
 /**

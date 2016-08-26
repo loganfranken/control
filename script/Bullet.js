@@ -9,6 +9,7 @@ function Bullet(x, y, rotationDegree) {
   this.x = x;
   this.y = y;
   this.rotationDegree = rotationDegree;
+  this.range = 200;
 
 }
 
@@ -29,5 +30,6 @@ Bullet.prototype.update = function() {
 
   this.y -= Math.cos(this.rotationDegree * Math.PI / 180);
   this.x += Math.sin(this.rotationDegree * Math.PI / 180);
+  this.range--;
 
 };
