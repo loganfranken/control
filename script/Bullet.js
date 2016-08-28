@@ -11,9 +11,9 @@ function Bullet(x, y, rotationDegree, speed, range) {
 
   this.x = x;
   this.y = y;
-  this.rotationDegree = rotationDegree;
+  this.velocityX = speed * Math.sin(Utility.toRadians(rotationDegree));
+  this.velocityY = speed * Math.cos(Utility.toRadians(rotationDegree));
   this.range = range;
-  this.speed = speed;
 
 }
 
@@ -32,10 +32,13 @@ Bullet.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
 };
 
+/**
+ * Updates the bullet's status
+ */
 Bullet.prototype.update = function() {
 
-  this.y -= this.speed * Math.cos(this.rotationDegree * Math.PI / 180);
-  this.x += this.speed * Math.sin(this.rotationDegree * Math.PI / 180);
+  this.y -= this.velocityY;
+  this.x += this.velocityX;
   this.range--;
 
 };

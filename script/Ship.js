@@ -28,7 +28,7 @@ function Ship(x, y) {
   this.bulletDelay = 30;
   this.currentBulletDelay = 0;
   this.bulletSpeed = 2.5;
-  this.bulletRange = 200;
+  this.bulletRange = 100;
 
   this.height = 30;
   this.width = 20;
