@@ -44,7 +44,7 @@ Game.prototype.update = function()
 
   if(!this.isUpPressed && !this.isDownPressed)
   {
-    this.player.currentSpeed = 0;
+    //this.player.currentSpeed = 0;
   }
 
   if(this.isRightPressed)

@@ -23,7 +23,7 @@ function Ship(x, y) {
   this.drift = 0.01;
   this.acceleration = 0.01;
 
-  this.currentSpeed = 0;
+  this.currentSpeed = 2;
 
   this.height = 30;
   this.width = 20;
@@ -67,19 +67,19 @@ Ship.prototype.draw = function(context) {
 Ship.prototype.update = function() {
 
   // Apply drift
-  this.y += this.currentDriftY;
-  this.x += this.currentDriftX;
+  //this.y += this.currentDriftY;
+  //this.x += this.currentDriftX;
 
   // Normalize speed
-  if(this.currentSpeed >= this.maxSpeed)
-  {
-    this.currentSpeed = this.maxSpeed;
-  }
+  //if(this.currentSpeed >= this.maxSpeed)
+  //{
+  //  this.currentSpeed = this.maxSpeed;
+  //}
 
-  if(this.currentSpeed <= 0)
-  {
-    this.currentSpeed = 0;
-  }
+  //if(this.currentSpeed <= 0)
+  //{
+  //  this.currentSpeed = 0;
+  //}
 
 };
 
@@ -91,15 +91,15 @@ Ship.prototype.moveForward = function() {
   // Move the ship forward
   this.y -= this.currentVelocityY;
   this.x += this.currentVelocityX;
-  this.currentSpeed += this.acceleration;
+  //this.currentSpeed += this.acceleration;
 
   // Update drift
-  this.currentDriftY -= (this.currentVelocityY * this.drift);
-  this.currentDriftX += (this.currentVelocityX * this.drift);
+  //this.currentDriftY -= (this.currentVelocityY * this.drift);
+  //this.currentDriftX += (this.currentVelocityX * this.drift);
 
   // Cap drift
-  this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
-  this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
+  //this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
+  //this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
 
   this.updateMovement(0);
 
@@ -113,15 +113,15 @@ Ship.prototype.moveBackward = function() {
   // Move the ship backward
   this.y += this.currentVelocityY;
   this.x -= this.currentVelocityX;
-  this.currentSpeed += this.acceleration;
+  //this.currentSpeed += this.acceleration;
 
   // Update drift
-  this.currentDriftY += (this.currentVelocityY * this.drift);
-  this.currentDriftX -= (this.currentVelocityX * this.drift);
+  //this.currentDriftY += (this.currentVelocityY * this.drift);
+  //this.currentDriftX -= (this.currentVelocityX * this.drift);
 
   // Cap drift
-  this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
-  this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
+  //this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
+  //this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
 
   this.updateMovement(0);
 
