@@ -20,11 +20,13 @@ function Bullet(x, y, rotationDegree, speed, range) {
 /**
  * Renders the bullet
  * @param {CanvasRenderingContext2D}  context - 2D rendering context to use when rendering the bullet
+ * @param {integer}                   mapCenterX  - X-coordinate of the map's center
+ * @param {integer}                   mapCenterY  - Y-coordinate of the map's center
  */
-Bullet.prototype.draw = function(context) {
+Bullet.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
   context.beginPath();
-  context.arc(this.x, this.y, 1, 0, 2 * Math.PI);
+  context.arc(this.x + mapCenterX, this.y + mapCenterY, 1, 0, 2 * Math.PI);
   context.fillStyle = 'rgb(255, 255, 255)';
   context.fill();
 

@@ -11,6 +11,9 @@ function Game(canvas)
   this.canvasWidth = this.canvas.width;
   this.canvasHeight = this.canvas.height;
 
+  this.mapCenterX = 250;
+  this.mapCenterY = 250;
+
   this.isUpPressed = false;
   this.isLeftPressed = false;
   this.isRightPressed = false;
@@ -20,7 +23,7 @@ function Game(canvas)
 
   this.hasGlitched = false;
 
-  this.player = new Ship(300, 300);
+  this.player = new Ship(0, 0);
   this.bullets = [];
   this.enemies = [];
 }
@@ -31,63 +34,12 @@ function Game(canvas)
 Game.prototype.update = function()
 {
   // Handle player input
+  this.handlePlayerInput();
 
-  if(this.isUpPressed)
-  {
-    this.player.moveForward();
-  }
-
-  if(this.isDownPressed)
-  {
-    this.player.moveBackward();
-  }
-
-  if(!this.isUpPressed && !this.isDownPressed)
-  {
-    //this.player.currentSpeed = 0;
-  }
-
-  if(this.isRightPressed)
-  {
-    this.player.rotateClockwise();
-  }
-
-  if(this.isLeftPressed)
-  {
-    this.player.rotateCounterClockwise();
-  }
-
-  if(this.isShootPressed && this.player.canShoot())
-  {
-    this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree, this.player.bulletSpeed, this.player.bulletRange));
-    this.player.shoot();
-  }
-
+  // Update entities
   this.player.update();
-
-  // Update enemies
-  this.enemies.forEach(function(enemy) {
-
-    if(enemy === null)
-    {
-      return;
-    }
-
-    enemy.update();
-
-  });
-
-  // Update bullets
-  this.bullets.forEach(function(bullet) {
-
-    if(bullet === null)
-    {
-      return;
-    }
-
-    bullet.update();
-
-  });
+  this.updateEntitites(this.enemies);
+  this.updateEntitites(this.bullets);
 
   // Update player/enemy interactions
   for(var i=0; i<this.enemies.length; i++)
@@ -153,6 +105,65 @@ Game.prototype.update = function()
 }
 
 /**
+ * Updates a game's state based on a player's input
+ */
+Game.prototype.handlePlayerInput = function() {
+
+  if(this.isUpPressed)
+  {
+    this.player.moveForward();
+    this.mapCenterY += this.player.currentVelocityY;
+    this.mapCenterX -= this.player.currentVelocityX;
+  }
+
+  if(this.isDownPressed)
+  {
+    this.player.moveBackward();
+    this.mapCenterY -= this.player.currentVelocityY;
+    this.mapCenterX += this.player.currentVelocityX;
+  }
+
+  if(!this.isUpPressed && !this.isDownPressed)
+  {
+    //this.player.currentSpeed = 0;
+  }
+
+  if(this.isRightPressed)
+  {
+    this.player.rotateClockwise();
+  }
+
+  if(this.isLeftPressed)
+  {
+    this.player.rotateCounterClockwise();
+  }
+
+  if(this.isShootPressed && this.player.canShoot())
+  {
+    this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree, this.player.bulletSpeed, this.player.bulletRange));
+    this.player.shoot();
+  }
+
+};
+
+/**
+ * Draws a collection of entities
+ * @param {object[]} - Collection of entities to update
+ */
+Game.prototype.updateEntitites = function(entities)
+{
+  entities.forEach(function(entity) {
+
+    if(entity == null)
+    {
+      return;
+    }
+
+    entity.update();
+  });
+}
+
+/**
  * Draws the game
  */
 Game.prototype.draw = function()
@@ -163,28 +174,29 @@ Game.prototype.draw = function()
   self.context.clearRect(0, 0, self.canvasWidth, self.canvasHeight);
 
   // Draw the player
-  self.player.draw(self.context);
+  self.player.draw(self.context, self.mapCenterX, self.mapCenterY);
 
-  // Draw the bullets
-  self.bullets.forEach(function(bullet) {
+  // Draw remaining game entities
+  self.drawEntitites(self.bullets);
+  self.drawEntitites(self.enemies);
+}
 
-    if(bullet == null)
+/**
+ * Draws a collection of entities
+ * @param {object[]} - Collection of entities to draw
+ */
+Game.prototype.drawEntitites = function(entities)
+{
+  var self = this;
+
+  entities.forEach(function(entity) {
+
+    if(entity == null)
     {
       return;
     }
 
-    bullet.draw(self.context);
-  });
-
-  // Draw the enemies
-  self.enemies.forEach(function(enemy) {
-
-    if(enemy == null)
-    {
-      return;
-    }
-
-    enemy.draw(self.context);
+    entity.draw(self.context, self.mapCenterX, self.mapCenterY);
   });
 }
 

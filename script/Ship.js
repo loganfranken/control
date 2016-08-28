@@ -27,7 +27,7 @@ function Ship(x, y) {
 
   this.bulletDelay = 30;
   this.currentBulletDelay = 0;
-  this.bulletSpeed = 2;
+  this.bulletSpeed = 2.5;
   this.bulletRange = 200;
 
   this.height = 30;
@@ -43,15 +43,17 @@ function Ship(x, y) {
 
 /**
  * Renders the ship
- * @param {CanvasRenderingContext2D}  context - 2D rendering context to use when rendering the ship
+ * @param {CanvasRenderingContext2D}  context     - 2D rendering context to use when rendering the ship
+ * @param {integer}                   mapCenterX  - X-coordinate of the map's center
+ * @param {integer}                   mapCenterY  - Y-coordinate of the map's center
  */
-Ship.prototype.draw = function(context) {
+Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
   context.save();
 
   context.fillStyle = this.color;
 
-  context.translate(this.x, this.y);
+  context.translate(this.x + mapCenterX, this.y + mapCenterY);
   context.rotate(this.currentRadians);
 
   context.beginPath();
