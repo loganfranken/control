@@ -19,11 +19,16 @@ function Ship(x, y) {
   this.currentDriftX = 0;
 
   this.maxSpeed = 3;
+  this.currentSpeed = 2;
   this.rotationSpeed = 1;
+
   this.drift = 0.01;
   this.acceleration = 0.01;
 
-  this.currentSpeed = 2;
+  this.bulletDelay = 30;
+  this.currentBulletDelay = 0;
+  this.bulletSpeed = 2;
+  this.bulletRange = 200;
 
   this.height = 30;
   this.width = 20;
@@ -65,6 +70,12 @@ Ship.prototype.draw = function(context) {
  * Updates the ship's state
  */
 Ship.prototype.update = function() {
+
+  // Reduce bullet delay
+  if(this.currentBulletDelay > 0)
+  {
+    this.currentBulletDelay--;
+  }
 
   // Apply drift
   //this.y += this.currentDriftY;
@@ -162,4 +173,18 @@ Ship.prototype.updateMovement = function(direction) {
  */
 Ship.prototype.contains = function(x, y) {
   return (x > this.x - this.width) && (x < this.x + this.width) && (y > this.y - this.height) && (y < this.y + this.height);
+};
+
+/**
+ * Whether or not the ship can shoot a bullet
+ */
+Ship.prototype.canShoot = function() {
+  return (this.currentBulletDelay === 0);
+};
+
+/**
+ * Updates the ship's status to reflect a bullet being shot
+ */
+Ship.prototype.shoot = function() {
+  this.currentBulletDelay = this.bulletDelay;
 };

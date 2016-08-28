@@ -57,9 +57,10 @@ Game.prototype.update = function()
     this.player.rotateCounterClockwise();
   }
 
-  if(this.isShootPressed)
+  if(this.isShootPressed && this.player.canShoot())
   {
-    this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree));
+    this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree, this.player.bulletSpeed, this.player.bulletRange));
+    this.player.shoot();
   }
 
   this.player.update();
