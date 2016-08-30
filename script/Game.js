@@ -69,6 +69,9 @@ Game.prototype.update = function()
       continue;
     }
 
+    enemy.lookAt(this.player.x, this.player.y);
+    enemy.moveForward();
+
     for(var j=0; j<this.bullets.length; j++)
     {
       var bullet = this.bullets[j];
@@ -253,8 +256,8 @@ Game.prototype.start = function()
   }
 
   // Add mock enemies for testing
-  this.enemies.push(new Ship(50, 50));
-  this.enemies.push(new Ship(100, 100));
+  this.enemies.push(new Ship(150, 150));
+  this.enemies.push(new Ship(200, 200));
 
   window.setInterval(loop, 10);
   loop();

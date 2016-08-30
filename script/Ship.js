@@ -190,3 +190,19 @@ Ship.prototype.canShoot = function() {
 Ship.prototype.shoot = function() {
   this.currentBulletDelay = this.bulletDelay;
 };
+
+/**
+ * Rotates the ship to face the specified point
+ * @param {integer} x - X-coordinate to look at
+ * @param {integer} y - Y-coordinate to look at
+ */
+Ship.prototype.lookAt = function(x, y) {
+
+  var targetX = this.x - x;
+  var targetY = this.y - y;
+
+  this.rotationDegree = -Math.atan2(targetX, targetY) * (180/Math.PI);
+
+  this.updateMovement(0);
+
+}
