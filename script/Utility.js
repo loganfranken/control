@@ -44,3 +44,27 @@ Utility.within = function(firstValue, secondValue, range)
 {
   return Math.abs(firstValue - secondValue) <= range;
 }
+
+/**
+ * Condenses an array, removing all null values
+ * @param {object[]} items - Array, containing any data type
+ */
+Utility.condense = function(items)
+{
+  var newItems = [];
+
+  var itemsLength = items.length;
+  for(var i=0; i<itemsLength; i++)
+  {
+    var item = items[i];
+
+    if(item === null)
+    {
+      continue;
+    }
+
+    newItems.push(item);
+  }
+
+  return newItems;
+}

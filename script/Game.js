@@ -100,6 +100,11 @@ Game.prototype.update = function()
 
   });
 
+  // Condense the entity arrays, removing the nulls
+  self.bullets = Utility.condense(self.bullets);
+  self.enemies = Utility.condense(self.enemies);
+  self.items = Utility.condense(self.items);
+
 }
 
 /**
