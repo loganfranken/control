@@ -34,91 +34,65 @@ function Game(canvas)
  */
 Game.prototype.update = function()
 {
+  var self = this;
+
   // Handle player input
-  this.handlePlayerInput();
+  self.handlePlayerInput();
 
-  // Update entities
-  this.player.update();
-  this.updateEntitites(this.enemies);
-  this.updateEntitites(this.bullets);
-  this.updateEntitites(this.items);
+  // Update player
+  self.player.update();
 
-  // Update player/enemy interactions
-  for(var i=0; i<this.enemies.length; i++)
-  {
-    var enemy = this.enemies[i];
+  // Update enemies
+  self.eachEntity(self.enemies, function(enemy) {
 
-    if(enemy === null)
+    enemy.update();
+
+    // Handle player glitching
+    if(!self.hasGlitched && self.isGlitchPressed && enemy.contains(self.player.x, self.player.y))
     {
-      continue;
+      self.enemies.push(self.player);
+      self.player = enemy;
+      self.hasGlitched = true;
     }
 
-    if(!this.hasGlitched && this.isGlitchPressed && enemy.contains(this.player.x, this.player.y))
-    {
-      this.enemies.push(this.player);
-      this.player = enemy;
-      this.hasGlitched = true;
-    }
-  }
-
-  // Update enemy movement
-  for(var i=0; i<this.enemies.length; i++)
-  {
-    var enemy = this.enemies[i];
-
-    if(enemy === null)
-    {
-      continue;
-    }
-
+    // Update enemy movement
     if(enemy.target === null)
     {
-      enemy.target = Utility.getRandomPoint(this.player.x, this.player.y, 300);
-    }
-  }
-
-  // Update bullet/enemy interactions
-  for(var i=0; i<this.enemies.length; i++)
-  {
-    var enemy = this.enemies[i];
-
-    if(enemy === null)
-    {
-      continue;
+      enemy.target = Utility.getRandomPoint(self.player.x, self.player.y, 300);
     }
 
-    for(var j=0; j<this.bullets.length; j++)
-    {
-      var bullet = this.bullets[j];
-
-      if(bullet === null)
-      {
-        continue;
-      }
+    // Update enemy/bullet interaction
+    self.eachEntity(self.bullets, function(bullet) {
 
       if(enemy.contains(bullet.x, bullet.y))
       {
-        this.enemies[i] = null;
-        this.bullets[j] = null;
+        self.enemies[i] = null;
+        self.bullets[j] = null;
       }
-    }
-  }
 
-  // Update bullet death
-  for(var i=0; i<this.bullets.length; i++)
-  {
-    var bullet = this.bullets[i];
+    });
 
-    if(bullet === null)
-    {
-      continue;
-    }
+  });
 
+  // Update bullets
+  self.eachEntity(self.bullets, function(bullet) {
+
+    bullet.upate();
+
+    // Update bullet death
     if(bullet.range <= 0)
     {
       this.bullets[i] = null;
     }
-  }
+
+  });
+
+  // Update items
+  self.eachEntity(self.items, function(item) {
+
+    item.update();
+
+  });
 
 }
 
@@ -165,20 +139,25 @@ Game.prototype.handlePlayerInput = function() {
 };
 
 /**
- * Draws a collection of entities
- * @param {object[]} - Collection of entities to update
+ * Loops through each entity and calls a function on each entity
+ * @param {object[]} entities - Collection of entities to update
+ * @param {function} callback - Function to call on each entity
  */
-Game.prototype.updateEntitites = function(entities)
+Game.prototype.eachEntity = function(entities, callback)
 {
-  entities.forEach(function(entity) {
+  var entitiesLength = entities.length;
+
+  for(var i=0; i<entitiesLength; i++)
+  {
+    var entity = entities[i];
 
     if(entity == null)
     {
       return;
     }
 
-    entity.update();
-  });
+    callback(entity);
+  }
 }
 
 /**
@@ -208,7 +187,7 @@ Game.prototype.drawEntitites = function(entities)
 {
   var self = this;
 
-  entities.forEach(function(entity) {
+  self.eachEntity(entities, function(entity) {
 
     if(entity == null)
     {
