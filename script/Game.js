@@ -43,7 +43,7 @@ Game.prototype.update = function()
   self.player.update();
 
   // Update enemies
-  self.eachEntity(self.enemies, function(enemy) {
+  self.eachEntity(self.enemies, function(enemy, enemyIndex) {
 
     enemy.update();
 
@@ -62,12 +62,12 @@ Game.prototype.update = function()
     }
 
     // Update enemy/bullet interaction
-    self.eachEntity(self.bullets, function(bullet) {
+    self.eachEntity(self.bullets, function(bullet, bulletIndex) {
 
       if(enemy.contains(bullet.x, bullet.y))
       {
-        self.enemies[i] = null;
-        self.bullets[j] = null;
+        self.enemies[enemyIndex] = null;
+        self.bullets[bulletIndex] = null;
       }
 
     });
@@ -75,22 +75,28 @@ Game.prototype.update = function()
   });
 
   // Update bullets
-  self.eachEntity(self.bullets, function(bullet) {
+  self.eachEntity(self.bullets, function(bullet, bulletIndex) {
 
     bullet.upate();
 
     // Update bullet death
     if(bullet.range <= 0)
     {
-      this.bullets[i] = null;
+      this.bullets[bulletIndex] = null;
     }
 
   });
 
   // Update items
-  self.eachEntity(self.items, function(item) {
+  self.eachEntity(self.items, function(item, itemIndex) {
 
     item.update();
+
+    // Update player/item interaction
+    if(self.player.contains(item.x, item.y))
+    {
+      self.items[itemIndex] = null;
+    }
 
   });
 
@@ -156,7 +162,7 @@ Game.prototype.eachEntity = function(entities, callback)
       return;
     }
 
-    callback(entity);
+    callback(entity, i);
   }
 }
 
