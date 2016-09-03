@@ -26,6 +26,7 @@ function Game(canvas)
   this.player = new Ship(0, 0);
   this.bullets = [];
   this.enemies = [];
+  this.items = [];
 }
 
 /**
@@ -40,6 +41,7 @@ Game.prototype.update = function()
   this.player.update();
   this.updateEntitites(this.enemies);
   this.updateEntitites(this.bullets);
+  this.updateEntitites(this.items);
 
   // Update player/enemy interactions
   for(var i=0; i<this.enemies.length; i++)
@@ -195,6 +197,7 @@ Game.prototype.draw = function()
   // Draw remaining game entities
   self.drawEntitites(self.bullets);
   self.drawEntitites(self.enemies);
+  self.drawEntitites(self.items);
 }
 
 /**
@@ -271,6 +274,10 @@ Game.prototype.start = function()
   // Add mock enemies for testing
   this.enemies.push(new Ship(150, 150));
   this.enemies.push(new Ship(200, 200));
+
+  // Add mock items for testing
+  this.items.push(new Item(300, 300));
+  this.items.push(new Item(50, 50));
 
   window.setInterval(loop, 10);
   loop();
