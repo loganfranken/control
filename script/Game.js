@@ -59,7 +59,7 @@ Game.prototype.update = function()
     }
   }
 
-  // Update bullet/enemy interactions
+  // Update enemy movement
   for(var i=0; i<this.enemies.length; i++)
   {
     var enemy = this.enemies[i];
@@ -69,8 +69,21 @@ Game.prototype.update = function()
       continue;
     }
 
-    enemy.lookAt(this.player.x, this.player.y);
-    enemy.moveForward();
+    if(enemy.target === null)
+    {
+      enemy.target = Utility.getRandomPoint(this.player.x, this.player.y, 300);
+    }
+  }
+
+  // Update bullet/enemy interactions
+  for(var i=0; i<this.enemies.length; i++)
+  {
+    var enemy = this.enemies[i];
+
+    if(enemy === null)
+    {
+      continue;
+    }
 
     for(var j=0; j<this.bullets.length; j++)
     {

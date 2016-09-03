@@ -36,6 +36,8 @@ function Ship(x, y) {
 
   this.color = 'rgb(255, 255, 255)';
 
+  this.target = null;
+
   // Initialize the ship
   this.updateMovement(0);
 
@@ -77,6 +79,20 @@ Ship.prototype.update = function() {
   if(this.currentBulletDelay > 0)
   {
     this.currentBulletDelay--;
+  }
+
+  // If this ship has an assigned target, move it towards the target
+  if(this.target)
+  {
+    if(Utility.within(this.x, this.target.x, 10) && Utility.within(this.y, this.target.y, 10))
+    {
+      this.target = null;
+    }
+    else
+    {
+      this.lookAt(this.target.x, this.target.y);
+      this.moveForward();
+    }
   }
 
   // Apply drift
