@@ -35,6 +35,37 @@ Utility.getRandomInt = function(min, max)
 }
 
 /**
+ * Returns a random RGB color
+ */
+Utility.getRandomColor = function()
+{
+  var red = Utility.getRandomInt(0, 255);
+  var blue = Utility.getRandomInt(0, 255);
+  var green = Utility.getRandomInt(0, 255);
+
+  return 'rgb(' + red + ', ' + blue + ',' + green + ')';
+}
+
+/**
+ * Returns a random boolean
+ */
+Utility.getRandomBoolean = function()
+{
+  return !!Utility.getRandomInt(0, 1);
+}
+
+/**
+ * Returns a random number between the maximum (inclusive) and minimum (inclusive)
+ * Credit: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+ * @param {number} min - Minimum (inclusive) range of the random integer
+ * @param {number} max - Maximum (inclusive) range of the random integer
+ */
+Utility.getRandom = function(min, max)
+{
+  return Math.random() * (max - min) + min;
+}
+
+/**
  * Determines if two values are within a certain range of eachother
  * @param {integer} firstValue  - First value to use in comparison
  * @param {integer} secondValue - Second value to use in comparison

@@ -1,13 +1,12 @@
 /**
  * A ship
  * @constructor
- * @param {integer} x - X-coordinate of the ship
- * @param {integer} y - Y-cooridnate of the ship
+ * @param {object} props - Various properties used in constructing the ship
  */
-function Ship(x, y) {
+function Ship(props) {
 
-  this.x = x;
-  this.y = y;
+  this.x = props.x;
+  this.y = props.y;
 
   this.rotationDegree = 0;
   this.currentRadians = 0;
@@ -30,11 +29,33 @@ function Ship(x, y) {
   this.bulletSpeed = 2.5;
   this.bulletRange = 100;
 
-  this.height = 30;
-  this.width = 20;
-  this.halfWidth = (this.width/2);
+  this.height = props.height;
+  this.width = props.width;
+  this.halfHeight = (this.height/2);
 
-  this.color = 'rgb(255, 255, 255)';
+  this.wingColor = props.wingColor;
+  this.wingWidth = props.wingWidth;
+  this.wingHeight = props.wingHeight;
+
+  this.bodyColor = props.bodyColor;
+  this.bodyWidth = props.bodyWidth;
+  this.bodyHeight = props.bodyHeight;
+  this.halfBodyWidth = (this.bodyWidth/2);
+  this.halfBodyHeight = (this.bodyHeight/2);
+
+  this.hasCockpit = props.hasCockpit;
+  this.cockpitColor = props.cockpitColor;
+  this.cockpitWidth = props.cockpitWidth;
+  this.cockpitHeight = props.cockpitHeight;
+  this.halfCockpitWidth = (this.cockpitWidth/2);
+  this.halfCockpitHeight = (this.cockpitHeight/2);
+
+  this.hasShuttleDesign = props.hasShuttleDesign;
+  this.shuttleDesignColor = props.shuttleDesignColor;
+  this.shuttleDesignWidth = props.shuttleDesignWidth;
+  this.shuttleDesignHeight = props.shuttleDesignHeight;
+  this.halfShuttleDesignWidth = (this.shuttleDesignWidth/2);
+  this.halfShuttleDesignHeight = (this.shuttleDesignHeight/2);
 
   this.target = null;
 
@@ -53,19 +74,35 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
   context.save();
 
-  context.fillStyle = this.color;
-
   context.translate(this.x + mapCenterX, this.y + mapCenterY);
   context.rotate(this.currentRadians);
 
   context.beginPath();
   context.moveTo(0, 0);
-  context.lineTo(-this.halfWidth, 0);
-  context.lineTo(-this.halfWidth, -this.height);
-  context.lineTo(this.halfWidth, -this.height);
-  context.lineTo(this.halfWidth, 0);
 
-  context.fill();
+  // Draw the body
+  context.fillStyle = this.bodyColor;
+  context.fillRect(-this.halfBodyWidth, -this.halfHeight, this.bodyWidth, this.bodyHeight);
+
+  // Draw the wings
+  context.fillStyle = this.wingColor;
+  context.fillRect(-this.halfBodyWidth - this.wingWidth, 0, this.wingWidth, this.wingHeight);
+  context.fillRect(this.halfBodyWidth, 0, this.wingWidth, this.wingHeight);
+
+  // Draw the cockpit
+  if(this.hasCockpit)
+  {
+    context.fillStyle = this.cockpitColor;
+    context.fillRect(-this.halfCockpitWidth, 0, this.cockpitWidth, this.cockpitHeight);
+  }
+
+  // Draw the shuttle design
+  if(this.hasShuttleDesign)
+  {
+    context.fillStyle = this.shuttleDesignColor;
+    context.fillRect(-this.halfShuttleDesignWidth, -this.halfHeight, this.shuttleDesignWidth, this.shuttleDesignHeight);
+  }
+
   context.restore();
 
 };

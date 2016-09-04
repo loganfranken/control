@@ -23,7 +23,7 @@ function Game(canvas)
 
   this.hasGlitched = false;
 
-  this.player = new Ship(0, 0);
+  this.player = ShipFactory.generateRandomShip(0, 0);
   this.bullets = [];
   this.enemies = [];
   this.items = [];
@@ -262,8 +262,8 @@ Game.prototype.start = function()
   }
 
   // Add mock enemies for testing
-  this.enemies.push(new Ship(150, 150));
-  this.enemies.push(new Ship(200, 200));
+  this.enemies.push(ShipFactory.generateRandomShip(150, 150));
+  this.enemies.push(ShipFactory.generateRandomShip(200, 200));
 
   // Add mock items for testing
   this.items.push(new Item(300, 300));
