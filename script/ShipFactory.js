@@ -47,7 +47,7 @@ ShipFactory.generateRandomShip = function(x, y)
   {
     shipProps.cockpitColor = Utility.getRandomColor();
     shipProps.cockpitWidth = shipProps.bodyWidth * Utility.getRandom(0.5, 1);
-    shipProps.cockpitHeight = shipProps.bodyHeight * Utility.getRandom(0.5, 1);
+    shipProps.cockpitHeight = shipProps.bodyHeight * Utility.getRandom(0.1, 0.5);
   }
 
   // Shuttle Design

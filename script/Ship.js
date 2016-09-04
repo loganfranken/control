@@ -14,14 +14,11 @@ function Ship(props) {
   this.currentVelocityY = 0;
   this.currentVelocityX = 0;
 
-  this.currentDriftY = 0;
-  this.currentDriftX = 0;
-
-  this.maxSpeed = 3;
-  this.currentSpeed = 2;
+  this.maxSpeed = 4;
+  this.currentSpeed = 0;
+  this.currentDriftSpeed = 0;
   this.rotationSpeed = 1;
 
-  this.drift = 0.01;
   this.acceleration = 0.01;
 
   this.bulletDelay = 30;
@@ -57,10 +54,11 @@ function Ship(props) {
   this.halfShuttleDesignWidth = (this.shuttleDesignWidth/2);
   this.halfShuttleDesignHeight = (this.shuttleDesignHeight/2);
 
-  this.target = null;
+  this.isMoving = false;
+  this.isMovingForward = false;
+  this.isMovingBackward = false;
 
-  // Initialize the ship
-  this.updateMovement(0);
+  this.target = null;
 
 }
 
@@ -132,20 +130,37 @@ Ship.prototype.update = function() {
     }
   }
 
-  // Apply drift
-  //this.y += this.currentDriftY;
-  //this.x += this.currentDriftX;
+  // Update ship movement
+  this.currentRadians = Utility.toRadians(this.rotationDegree);
+  this.currentVelocityY = this.currentSpeed * Math.cos(this.currentRadians);
+  this.currentVelocityX = this.currentSpeed * Math.sin(this.currentRadians);
 
-  // Normalize speed
-  //if(this.currentSpeed >= this.maxSpeed)
-  //{
-  //  this.currentSpeed = this.maxSpeed;
-  //}
+  // Move forward
+  if(this.isMovingForward)
+  {
+    // Move the ship forward
+    this.y -= this.currentVelocityY;
+    this.x += this.currentVelocityX;
+  }
 
-  //if(this.currentSpeed <= 0)
-  //{
-  //  this.currentSpeed = 0;
-  //}
+  // Move backward
+  if(this.isMovingBackward)
+  {
+    // Move the ship backward
+    this.y += this.currentVelocityY;
+    this.x -= this.currentVelocityX;
+  }
+
+  // Update acceleration
+  if(this.isMoving)
+  {
+    this.currentSpeed += this.acceleration;
+
+    if(this.currentSpeed > this.maxSpeed)
+    {
+      this.currentSpeed = this.maxSpeed;
+    }
+  }
 
 };
 
@@ -153,72 +168,40 @@ Ship.prototype.update = function() {
  * Moves the ship forward
  */
 Ship.prototype.moveForward = function() {
-
-  // Move the ship forward
-  this.y -= this.currentVelocityY;
-  this.x += this.currentVelocityX;
-  //this.currentSpeed += this.acceleration;
-
-  // Update drift
-  //this.currentDriftY -= (this.currentVelocityY * this.drift);
-  //this.currentDriftX += (this.currentVelocityX * this.drift);
-
-  // Cap drift
-  //this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
-  //this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
-
-  this.updateMovement(0);
-
+  this.isMoving = true;
+  this.isMovingForward = true;
 };
 
 /**
  * Moves the ship backward
  */
 Ship.prototype.moveBackward = function() {
+  this.isMoving = true;
+  this.isMovingBackward = true;
+};
 
-  // Move the ship backward
-  this.y += this.currentVelocityY;
-  this.x -= this.currentVelocityX;
-  //this.currentSpeed += this.acceleration;
-
-  // Update drift
-  //this.currentDriftY += (this.currentVelocityY * this.drift);
-  //this.currentDriftX -= (this.currentVelocityX * this.drift);
-
-  // Cap drift
-  //this.currentDriftY = (this.currentDriftY > this.maxSpeed) ? this.maxSpeed : this.currentDriftY;
-  //this.currentDriftX = (this.currentDriftX > this.maxSpeed) ? this.maxSpeed : this.currentDriftX;
-
-  this.updateMovement(0);
-
+/**
+ * Stop the ship's movement
+ */
+Ship.prototype.stop = function() {
+  this.isMoving = false;
+  this.isMovingForward = false;
+  this.isMovingBackward = false;
+  this.currentSpeed = 0;
 };
 
 /**
  * Rotates the ship clockwise
  */
 Ship.prototype.rotateClockwise = function() {
-  this.updateMovement(1);
+  this.rotationDegree += this.rotationSpeed;
 };
 
 /**
  * Moves the ship counterclockwise
  */
 Ship.prototype.rotateCounterClockwise = function() {
-  this.updateMovement(-1);
-};
-
-/**
- * Updates the ship's movement
- * @param {integer} direction - Direction of the rotation (0 = no rotation, 1 = clockwise, -1 = counterclockwise)
- */
-Ship.prototype.updateMovement = function(direction) {
-
-  this.rotationDegree += (direction * this.rotationSpeed);
-
-  this.currentRadians = Utility.toRadians(this.rotationDegree);
-  this.currentVelocityY = this.currentSpeed * Math.cos(this.currentRadians);
-  this.currentVelocityX = this.currentSpeed * Math.sin(this.currentRadians);
-
+  this.rotationDegree -= this.rotationSpeed;
 };
 
 /**
@@ -255,7 +238,5 @@ Ship.prototype.lookAt = function(x, y) {
   var targetY = this.y - y;
 
   this.rotationDegree = -Math.atan2(targetX, targetY) * (180/Math.PI);
-
-  this.updateMovement(0);
 
 }

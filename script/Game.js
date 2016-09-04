@@ -128,7 +128,7 @@ Game.prototype.handlePlayerInput = function() {
 
   if(!this.isUpPressed && !this.isDownPressed)
   {
-    //this.player.currentSpeed = 0;
+    this.player.stop();
   }
 
   if(this.isRightPressed)
@@ -262,8 +262,8 @@ Game.prototype.start = function()
   }
 
   // Add mock enemies for testing
-  this.enemies.push(ShipFactory.generateRandomShip(150, 150));
-  this.enemies.push(ShipFactory.generateRandomShip(200, 200));
+  //this.enemies.push(ShipFactory.generateRandomShip(150, 150));
+  //this.enemies.push(ShipFactory.generateRandomShip(200, 200));
 
   // Add mock items for testing
   this.items.push(new Item(300, 300));
