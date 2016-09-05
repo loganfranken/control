@@ -21,8 +21,6 @@ function Game(canvas)
   this.isShootPressed = false;
   this.isGlitchPressed = false;
 
-  this.hasGlitched = false;
-
   this.player = ShipFactory.generateRandomShip(0, 0);
   this.bullets = [];
   this.enemies = [];
@@ -48,12 +46,22 @@ Game.prototype.update = function()
     enemy.update();
 
     // Handle player glitching
+    if(self.isGlitchPressed)
+    {
+      self.player.startGlitching();
+    }
+    else if(self.player.isGlitching)
+    {
+      self.player.stopGlitching();
+    }
+    /*
     if(!self.hasGlitched && self.isGlitchPressed && enemy.contains(self.player.x, self.player.y))
     {
       self.enemies.push(self.player);
       self.player = enemy;
       self.hasGlitched = true;
     }
+    */
 
     // Update enemy movement
     if(enemy.target === null)
@@ -262,8 +270,8 @@ Game.prototype.start = function()
   }
 
   // Add mock enemies for testing
-  //this.enemies.push(ShipFactory.generateRandomShip(150, 150));
-  //this.enemies.push(ShipFactory.generateRandomShip(200, 200));
+  this.enemies.push(ShipFactory.generateRandomShip(150, 150));
+  this.enemies.push(ShipFactory.generateRandomShip(200, 200));
 
   // Add mock items for testing
   this.items.push(new Item(300, 300));

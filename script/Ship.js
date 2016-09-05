@@ -58,15 +58,17 @@ function Ship(props) {
   this.isMovingForward = false;
   this.isMovingBackward = false;
 
+  this.isGlitching = false;
+
   this.target = null;
 
 }
 
 /**
  * Renders the ship
- * @param {CanvasRenderingContext2D}  context     - 2D rendering context to use when rendering the ship
- * @param {integer}                   mapCenterX  - X-coordinate of the map's center
- * @param {integer}                   mapCenterY  - Y-coordinate of the map's center
+ * @param {CanvasRenderingContext2D} context - 2D rendering context to use when rendering the ship
+ * @param {integer} mapCenterX - X-coordinate of the map's center
+ * @param {integer} mapCenterY - Y-coordinate of the map's center
  */
 Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
@@ -77,6 +79,19 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
   context.beginPath();
   context.moveTo(0, 0);
+
+  // Draw the glitch sphere
+  if(this.isGlitching)
+  {
+    context.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    context.beginPath();
+    context.arc(0, 0, 75, 0, 2 * Math.PI);
+    context.fill();
+
+    context.lineWidth = 3;
+    context.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    context.stroke();
+  }
 
   // Draw the body
   context.fillStyle = this.bodyColor;
@@ -239,4 +254,18 @@ Ship.prototype.lookAt = function(x, y) {
 
   this.rotationDegree = -Math.atan2(targetX, targetY) * (180/Math.PI);
 
+}
+
+/**
+ * Activate the ship's glitch mechanic
+ */
+Ship.prototype.startGlitching = function() {
+  this.isGlitching = true;
+}
+
+/**
+ * Deactivate the ship's glitch mechanic
+ */
+Ship.prototype.stopGlitching = function() {
+  this.isGlitching = false;
 }
