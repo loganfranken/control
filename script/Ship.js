@@ -5,41 +5,45 @@
  */
 function Ship(props) {
 
+  // Coordinates
   this.x = props.x;
   this.y = props.y;
 
+  // Rotation
   this.rotationDegree = 0;
   this.currentRadians = 0;
 
+  // Velocity
   this.currentVelocityY = 0;
   this.currentVelocityX = 0;
 
+  // Speed
   this.maxSpeed = 4;
   this.currentSpeed = 0;
   this.currentDriftSpeed = 0;
   this.rotationSpeed = 1;
 
+  // Acceleration
   this.acceleration = 0.01;
 
-  this.bulletDelay = 30;
-  this.currentBulletDelay = 0;
-  this.bulletSpeed = 2.5;
-  this.bulletRange = 100;
-
+  // Dimensions
   this.height = props.height;
   this.width = props.width;
   this.halfHeight = (this.height/2);
 
+  // Wing Dimensions
   this.wingColor = props.wingColor;
   this.wingWidth = props.wingWidth;
   this.wingHeight = props.wingHeight;
 
+  // Body Dimensions
   this.bodyColor = props.bodyColor;
   this.bodyWidth = props.bodyWidth;
   this.bodyHeight = props.bodyHeight;
   this.halfBodyWidth = (this.bodyWidth/2);
   this.halfBodyHeight = (this.bodyHeight/2);
 
+  // Cockpit Dimensions
   this.hasCockpit = props.hasCockpit;
   this.cockpitColor = props.cockpitColor;
   this.cockpitWidth = props.cockpitWidth;
@@ -47,6 +51,7 @@ function Ship(props) {
   this.halfCockpitWidth = (this.cockpitWidth/2);
   this.halfCockpitHeight = (this.cockpitHeight/2);
 
+  // Shuttle Dimensions
   this.hasShuttleDesign = props.hasShuttleDesign;
   this.shuttleDesignColor = props.shuttleDesignColor;
   this.shuttleDesignWidth = props.shuttleDesignWidth;
@@ -54,12 +59,23 @@ function Ship(props) {
   this.halfShuttleDesignWidth = (this.shuttleDesignWidth/2);
   this.halfShuttleDesignHeight = (this.shuttleDesignHeight/2);
 
+  // Movement
   this.isMoving = false;
   this.isMovingForward = false;
   this.isMovingBackward = false;
 
+  // Glitching
   this.isGlitching = false;
 
+  // Bullets
+  this.bulletDelay = props.bulletDelay;
+  this.bulletSpeed = props.bulletSpeed;
+  this.bulletRange = props.bulletRange;
+  this.bulletColor = props.bulletColor;
+  this.bulletSize = props.bulletSize;
+  this.currentBulletDelay = 0;
+
+  // Target
   this.target = null;
 
 }
@@ -268,4 +284,21 @@ Ship.prototype.startGlitching = function() {
  */
 Ship.prototype.stopGlitching = function() {
   this.isGlitching = false;
+}
+
+/**
+ * Get a bullet entity
+ */
+Ship.prototype.getBullet = function() {
+
+  return new Bullet({
+    x: this.x,
+    y: this.y,
+    rotationDegree: this.rotationDegree,
+    speed: this.bulletSpeed,
+    range: this.bulletRange,
+    color: this.bulletColor,
+    size: this.bulletSize
+  });
+
 }

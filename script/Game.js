@@ -85,12 +85,12 @@ Game.prototype.update = function()
   // Update bullets
   self.eachEntity(self.bullets, function(bullet, bulletIndex) {
 
-    bullet.upate();
+    bullet.update();
 
     // Update bullet death
     if(bullet.range <= 0)
     {
-      this.bullets[bulletIndex] = null;
+      self.bullets[bulletIndex] = null;
     }
 
   });
@@ -151,7 +151,7 @@ Game.prototype.handlePlayerInput = function() {
 
   if(this.isShootPressed && this.player.canShoot())
   {
-    this.bullets.push(new Bullet(this.player.x, this.player.y, this.player.rotationDegree, this.player.bulletSpeed, this.player.bulletRange));
+    this.bullets.push(this.player.getBullet());
     this.player.shoot();
   }
 
@@ -189,13 +189,17 @@ Game.prototype.draw = function()
   // Clear the canvas
   self.context.clearRect(0, 0, self.canvasWidth, self.canvasHeight);
 
+  // Draw bullets
+  self.drawEntitites(self.bullets);
+
+  // Draw items
+  self.drawEntitites(self.items);
+
+  // Draw enemies
+  self.drawEntitites(self.enemies);
+
   // Draw the player
   self.player.draw(self.context, self.mapCenterX, self.mapCenterY);
-
-  // Draw remaining game entities
-  self.drawEntitites(self.bullets);
-  self.drawEntitites(self.enemies);
-  self.drawEntitites(self.items);
 }
 
 /**

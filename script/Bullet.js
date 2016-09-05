@@ -1,19 +1,17 @@
 /**
  * A bullet
  * @constructor
- * @param {integer} x               - X-coordinate of the bullet
- * @param {integer} y               - Y-cooridnate of the bullet
- * @param {integer} rotationDegree  - Degree of rotation
- * @param {integer} speed           - Speed of the bullet
- * @param {integer} range           - How far the bullet can travel
+ * @param {object} props - Various properties used in constructing the ship
  */
-function Bullet(x, y, rotationDegree, speed, range) {
+function Bullet(props) {
 
-  this.x = x;
-  this.y = y;
-  this.velocityX = speed * Math.sin(Utility.toRadians(rotationDegree));
-  this.velocityY = speed * Math.cos(Utility.toRadians(rotationDegree));
-  this.range = range;
+  this.x = props.x;
+  this.y = props.y;
+  this.velocityX = props.speed * Math.sin(Utility.toRadians(props.rotationDegree));
+  this.velocityY = props.speed * Math.cos(Utility.toRadians(props.rotationDegree));
+  this.range = props.range;
+  this.color = props.color;
+  this.size = props.size;
 
 }
 
@@ -26,8 +24,8 @@ function Bullet(x, y, rotationDegree, speed, range) {
 Bullet.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
   context.beginPath();
-  context.arc(this.x + mapCenterX, this.y + mapCenterY, 1, 0, 2 * Math.PI);
-  context.fillStyle = 'rgb(255, 255, 255)';
+  context.arc(this.x + mapCenterX, this.y + mapCenterY, this.size, 0, 2 * Math.PI);
+  context.fillStyle = this.color;
   context.fill();
 
 };

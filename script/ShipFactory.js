@@ -22,6 +22,12 @@ ShipFactory.generateRandomShip = function(x, y)
   var bodyWidth = width * (bodyWidthFactor * 0.1);
   var bodyHeight = height * Utility.getRandom(0.6, 1);
 
+  var bulletSpeed = Utility.getRandom(2, 4);
+  var bulletRange = Utility.getRandomInt(80, 140);
+  var bulletColor = Utility.getRandomColor();
+  var bulletSize = Utility.getRandomInt(1, 3);
+  var bulletDelay = Utility.getRandomInt(20, 50);
+
   var shipProps = {
 
     x: x,
@@ -37,6 +43,12 @@ ShipFactory.generateRandomShip = function(x, y)
     bodyColor: bodyColor,
     bodyWidth: bodyWidth,
     bodyHeight: bodyHeight,
+
+    bulletSpeed: bulletSpeed,
+    bulletRange: bulletRange,
+    bulletColor: bulletColor,
+    bulletSize: bulletSize,
+    bulletDelay: bulletDelay
 
   };
 
