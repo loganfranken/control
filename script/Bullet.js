@@ -29,6 +29,7 @@ Bullet.prototype.draw = function(context, mapCenterX, mapCenterY) {
   context.arc(this.x + mapCenterX, this.y + mapCenterY, this.radius, 0, 2 * Math.PI);
   context.fillStyle = this.color;
   context.fill();
+  context.closePath();
 
 };
 

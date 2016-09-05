@@ -25,6 +25,7 @@ function Game(canvas)
   this.bullets = [];
   this.enemies = [];
   this.items = [];
+  this.explosions = [];
 }
 
 /**
@@ -125,6 +126,7 @@ Game.prototype.update = function()
         {
           // Destroy enemy
           self.enemies[enemyIndex] = null;
+          self.explosions.push(new Explosion(enemy.x, enemy.y, enemy.bodyColor));
         }
 
         self.bullets[bulletIndex] = null;
@@ -159,10 +161,21 @@ Game.prototype.update = function()
 
   });
 
+  // Update explosions
+  self.eachEntity(self.explosions, function(explosion, explosionIndex) {
+
+    if(explosion.isFinished())
+    {
+      self.explosions[explosionIndex] = null;
+    }
+
+  });
+
   // Condense the entity arrays, removing the nulls
   self.bullets = Utility.condense(self.bullets);
   self.enemies = Utility.condense(self.enemies);
   self.items = Utility.condense(self.items);
+  self.explosions = Utility.condense(self.explosions);
 
 }
 
@@ -248,6 +261,9 @@ Game.prototype.draw = function()
 
   // Draw enemies
   self.drawEntitites(self.enemies);
+
+  // Draw explosions
+  self.drawEntitites(self.explosions);
 
   // Draw the player
   self.player.draw(self.context, self.mapCenterX, self.mapCenterY);

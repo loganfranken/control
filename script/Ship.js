@@ -135,6 +135,7 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
     context.lineWidth = 3;
     context.strokeStyle = currGlitchColor;
     context.stroke();
+    context.closePath();
 
     this.animGlitchCounter++;
 
@@ -174,12 +175,14 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
     context.fillRect(-this.halfShuttleDesignWidth, -this.halfHeight, this.shuttleDesignWidth, this.shuttleDesignHeight);
   }
 
+  context.closePath();
   context.restore();
 
   // Draw the health bar
   context.save();
   context.translate(this.x + mapCenterX, this.y + mapCenterY);
 
+  context.lineWidth = 1;
   context.strokeStyle = 'rgba(255, 255, 255, 0.6)';
   context.strokeRect(-20, this.halfHeight + 10, 40, 5);
 
