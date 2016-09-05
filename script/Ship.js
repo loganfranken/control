@@ -100,6 +100,7 @@ function Ship(props) {
 
   // Behavior
   this.behavior = props.behavior;
+  this.sightRange = 200;
   this.target = null;
 
 }
@@ -319,15 +320,6 @@ Ship.prototype.intersects = function(boundingCircle)
 };
 
 /**
- * Whether or not the ship's glitch range intersects a given bounding circle
- * @param {object} boundingCircle - Bounding circle to test intersection
- */
-Ship.prototype.isInGlitchRange = function(boundingCircle)
-{
-  return Utility.doCirclesIntersect(boundingCircle, this.getGlitchRangeBoundingCircle());
-};
-
-/**
  * Whether or not the ship can shoot a bullet
  */
 Ship.prototype.canShoot = function() {
@@ -454,7 +446,16 @@ Ship.prototype.getBoundingCircle = function() {
 };
 
 /**
- * Returns an array of points describing the ship's glitch range bounding circle
+ * Whether or not the ship's glitch range intersects a given bounding circle
+ * @param {object} boundingCircle - Bounding circle to test intersection
+ */
+Ship.prototype.isInGlitchRange = function(boundingCircle)
+{
+  return Utility.doCirclesIntersect(boundingCircle, this.getGlitchRangeBoundingCircle());
+};
+
+/**
+ * Returns an object describing the ship's glitch range bounding circle
  */
 Ship.prototype.getGlitchRangeBoundingCircle = function() {
 
@@ -462,6 +463,28 @@ Ship.prototype.getGlitchRangeBoundingCircle = function() {
     x: this.x,
     y: this.y,
     radius: this.glitchRange
+  };
+
+};
+
+/**
+ * Whether or not the ship's sight range intersects a given bounding circle
+ * @param {object} boundingCircle - Bounding circle to test intersection
+ */
+Ship.prototype.isInSightRange = function(boundingCircle)
+{
+  return Utility.doCirclesIntersect(boundingCircle, this.getSightBoundingCircle());
+};
+
+/**
+ * Returns an object describing the ship's sight range bounding circle
+ */
+Ship.prototype.getSightBoundingCircle = function() {
+
+  return {
+    x: this.x,
+    y: this.y,
+    radius: this.sightRange
   };
 
 };

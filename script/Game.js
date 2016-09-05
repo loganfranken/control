@@ -98,7 +98,12 @@ Game.prototype.update = function()
       self.handleCollision(self.player, enemy);
     }
 
-    // Update enemy/enemy collisions
+    // Update enemy/player sighting
+    if(enemy.behavior == ShipBehavior.Aggressive && enemy.isInSightRange(self.player.getBoundingCircle()))
+    {
+      enemy.target = self.player;
+    }
+
     self.eachEntity(self.enemies, function(otherEnemy) {
 
       if(enemy.id === otherEnemy.id)
@@ -106,9 +111,23 @@ Game.prototype.update = function()
         return;
       }
 
-      if(enemy.intersects(otherEnemy.getBoundingCircle()))
+      var otherEnemyBoundingCircle = otherEnemy.getBoundingCircle();
+
+      // Update enemy/enemy collisions
+      if(enemy.intersects(otherEnemyBoundingCircle))
       {
         self.handleCollision(otherEnemy, enemy);
+      }
+
+      if(enemy.target != null)
+      {
+        return;
+      }
+
+      // Update enemy/enemy sighting
+      if(enemy.isInSightRange(otherEnemyBoundingCircle))
+      {
+        enemy.target = otherEnemy;
       }
 
     });
@@ -121,13 +140,23 @@ Game.prototype.update = function()
 
     if(enemy.behavior === ShipBehavior.Aggressive)
     {
-      enemy.lookTowards(self.player.x, self.player.y);
-      enemy.moveForward();
-
-      if(enemy.canShoot())
+      if(enemy.target != null)
       {
-        self.bullets.push(enemy.getBullet());
-        enemy.shoot();
+        // If an enemy ship is aggressive and it has a target,
+        // make the enemy ship follow its target
+        enemy.lookTowards(enemy.target.x, enemy.target.y);
+        enemy.moveForward();
+
+        if(enemy.canShoot())
+        {
+          self.bullets.push(enemy.getBullet());
+          enemy.shoot();
+        }
+      }
+      else
+      {
+        // Otherwise, just make the ship move forward
+        enemy.moveForward();
       }
     }
 
