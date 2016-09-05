@@ -7,12 +7,12 @@ var ShipFactory = {};
  */
 ShipFactory.generateRandomShip = function(x, y)
 {
-  // Generate dimensions
   var width = Utility.getRandomInt(20, 40);
   var height = Utility.getRandomInt(20, 40);
 
   var speed = Utility.getRandom(0.5, 3);
   var rotationSpeed = Utility.getRandomInt(1, 3);
+  var rotationDegree = Utility.getRandomInt(0, 360);
 
   var bodyWidthFactor = Utility.getRandomInt(3, 8);
   var wingWidthFactor = (10 - bodyWidthFactor)/2;
@@ -33,6 +33,8 @@ ShipFactory.generateRandomShip = function(x, y)
 
   var health = Utility.getRandomInt(20, 50);
 
+  var behavior = Utility.getRandomInt(0, 2);
+
   var shipProps = {
 
     x: x,
@@ -43,6 +45,7 @@ ShipFactory.generateRandomShip = function(x, y)
 
     speed: speed,
     rotationSpeed: rotationSpeed,
+    rotationDegree: rotationDegree,
 
     wingColor: wingColor,
     wingWidth: wingWidth,
@@ -59,7 +62,9 @@ ShipFactory.generateRandomShip = function(x, y)
     bulletDelay: bulletDelay,
     bulletDamage: bulletRadius,
 
-    health: health
+    health: health,
+
+    behavior: behavior
 
   };
 

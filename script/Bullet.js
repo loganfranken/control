@@ -13,6 +13,7 @@ function Bullet(props) {
   this.color = props.color;
   this.radius = props.radius;
   this.damage = props.damage;
+  this.sourceId = props.sourceId;
 
 }
 

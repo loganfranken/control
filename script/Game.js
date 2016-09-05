@@ -11,8 +11,8 @@ function Game(canvas)
   this.canvasWidth = this.canvas.width;
   this.canvasHeight = this.canvas.height;
 
-  this.mapCenterX = 250;
-  this.mapCenterY = 250;
+  this.mapCenterX = 400;
+  this.mapCenterY = 300;
 
   this.isUpPressed = false;
   this.isLeftPressed = false;
@@ -85,14 +85,37 @@ Game.prototype.update = function()
     }
 
     // Update enemy movement
-    if(enemy.target === null)
+    if(enemy.behavior === ShipBehavior.Lazy)
     {
-      enemy.stop();
-      enemy.target = Utility.getRandomPoint(self.player.x, self.player.y, 300);
+      enemy.moveForward();
+    }
+
+    if(enemy.behavior === ShipBehavior.Aggressive)
+    {
+      enemy.lookTowards(self.player.x, self.player.y);
+      enemy.moveForward();
+
+      if(enemy.canShoot())
+      {
+        self.bullets.push(enemy.getBullet());
+        enemy.shoot();
+      }
+    }
+
+    if(enemy.behavior === ShipBehavior.Fearful)
+    {
+      enemy.lookAwayFrom(self.player.x, self.player.y);
+      enemy.moveForward();
     }
 
     // Update enemy/bullet interaction
     self.eachEntity(self.bullets, function(bullet, bulletIndex) {
+
+      // No friendly fire
+      if(bullet.sourceId === enemy.id)
+      {
+        return;
+      }
 
       if(enemy.intersects(bullet.getBoundingCircle()))
       {

@@ -5,12 +5,15 @@
  */
 function Ship(props) {
 
+  // ID
+  this.id = Utility.getRandom(0, 99999999);
+
   // Coordinates
   this.x = props.x;
   this.y = props.y;
 
   // Rotation
-  this.rotationDegree = 0;
+  this.rotationDegree = props.rotationDegree;
   this.currentRadians = 0;
 
   // Velocity
@@ -94,7 +97,8 @@ function Ship(props) {
   this.animMaxHitCounter = 5;
   this.animHitCounter = 0;
 
-  // Target
+  // Behavior
+  this.behavior = props.behavior;
   this.target = null;
 
 }
@@ -210,20 +214,6 @@ Ship.prototype.update = function() {
   if(this.currentBulletDelay > 0)
   {
     this.currentBulletDelay--;
-  }
-
-  // If this ship has an assigned target, move it towards the target
-  if(this.target)
-  {
-    if(Utility.within(this.x, this.target.x, 10) && Utility.within(this.y, this.target.y, 10))
-    {
-      this.target = null;
-    }
-    else
-    {
-      this.lookTowards(this.target.x, this.target.y);
-      this.moveForward();
-    }
   }
 
   // Update weak status
@@ -376,6 +366,34 @@ Ship.prototype.lookTowards = function(x, y) {
 }
 
 /**
+ * Rotates the ship to face away from the specified point
+ * @param {integer} x - X-coordinate to look at
+ * @param {integer} y - Y-coordinate to look at
+ */
+Ship.prototype.lookAwayFrom = function(x, y) {
+
+  var targetX = this.x - x;
+  var targetY = this.y - y;
+
+  var targetRotationDegree = Math.atan2(targetX, targetY) * (180/Math.PI);
+
+  if(Utility.within(this.rotationDegree, targetRotationDegree, 2))
+  {
+    return;
+  }
+
+  if(this.rotationDegree > targetRotationDegree)
+  {
+    this.rotationDegree -= this.rotationSpeed;
+  }
+  else
+  {
+    this.rotationDegree += this.rotationSpeed;
+  }
+
+}
+
+/**
  * Activate the ship's glitch mechanic
  */
 Ship.prototype.startGlitching = function() {
@@ -409,7 +427,8 @@ Ship.prototype.getBullet = function() {
     range: this.bulletRange,
     color: this.bulletColor,
     radius: this.bulletRadius,
-    damage: this.bulletDamage
+    damage: this.bulletDamage,
+    sourceId: this.id
   });
 
 }
