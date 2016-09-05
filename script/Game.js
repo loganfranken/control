@@ -92,23 +92,26 @@ Game.prototype.update = function()
       return;
     }
 
-    // Update enemy/player interaction
+    // Update enemy/player collisions
     if(self.player.intersects(enemyBoundingCircle))
     {
-      var enemySpeed = enemy.speed;
-      var playerSpeed = self.player.speed;
-
-      var collisionDamage = Math.abs(enemySpeed - playerSpeed);
-
-      // Damage both the player and enemy ship w/ the difference in their speeds
-      self.player.damage(collisionDamage);
-      enemy.damage(collisionDamage);
-
-      // Push both the enemy and player ship backwards
-      var pushBackSpeed = (enemySpeed > playerSpeed ? enemySpeed : playerSpeed) * 1.5;
-      self.player.pushBackward(pushBackSpeed);
-      enemy.pushBackward(pushBackSpeed);
+      self.handleCollision(self.player, enemy);
     }
+
+    // Update enemy/enemy collisions
+    self.eachEntity(self.enemies, function(otherEnemy) {
+
+      if(enemy.id === otherEnemy.id)
+      {
+        return;
+      }
+
+      if(enemy.intersects(otherEnemy.getBoundingCircle()))
+      {
+        self.handleCollision(otherEnemy, enemy);
+      }
+
+    });
 
     // Update enemy movement
     if(enemy.behavior === ShipBehavior.Lazy)
@@ -205,6 +208,29 @@ Game.prototype.update = function()
 }
 
 /**
+ * Handle a collision between two ships
+ * @param {object} entityA - First entity involved in the collision
+ * @param {object} entityB - Second entity involved in the collision
+ */
+Game.prototype.handleCollision = function(entityA, entityB) {
+
+  var entityASpeed = entityA.speed;
+  var entityBSpeed = entityB.speed;
+
+  var collisionDamage = Math.abs(entityASpeed - entityBSpeed);
+
+  // Damage both the player and enemy ship w/ the difference in their speeds
+  entityA.damage(collisionDamage);
+  entityB.damage(collisionDamage);
+
+  // Push both the enemy and player ship backwards
+  var pushBackSpeed = (entityASpeed > entityBSpeed ? entityASpeed : entityBSpeed) * 1.5;
+  entityA.pushBackward(pushBackSpeed);
+  entityB.pushBackward(pushBackSpeed);
+
+}
+
+/**
  * Updates a game's state based on a player's input
  */
 Game.prototype.handlePlayerInput = function() {
@@ -212,15 +238,11 @@ Game.prototype.handlePlayerInput = function() {
   if(this.isUpPressed)
   {
     this.player.moveForward();
-    //this.mapCenterY += this.player.currentVelocityY;
-    //this.mapCenterX -= this.player.currentVelocityX;
   }
 
   if(this.isDownPressed)
   {
     this.player.moveBackward();
-    //this.mapCenterY -= this.player.currentVelocityY;
-    //this.mapCenterX += this.player.currentVelocityX;
   }
 
   if(!this.isUpPressed && !this.isDownPressed)
