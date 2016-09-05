@@ -71,7 +71,24 @@ Game.prototype.update = function()
         && enemy.canBeGlitched()
         && self.player.isInGlitchRange(enemyBoundingCircle))
     {
+      // Cache player coordinates to re-center the map
+      var oldPlayerX = self.player.x;
+      var oldPlayerY = self.player.y;
+
+      // Trigger an explosion where the old ship was located
+      self.explosions.push(new Explosion(self.player.x, self.player.y, self.player.bodyColor));
+
+      // Remove the player's old ship and swap the player with the enemy
       self.player = enemy;
+      self.enemies[enemyIndex] = null;
+
+      // Reset the player's health
+      self.player.health = self.player.maxHealth;
+
+      // Re-center the map
+      self.mapCenterX -= (self.player.x - oldPlayerX);
+      self.mapCenterY -= (self.player.y - oldPlayerY);
+
       return;
     }
 
