@@ -79,8 +79,9 @@ Game.prototype.update = function()
       enemy.damage(collisionDamage);
 
       // Push both the enemy and player ship backwards
-      self.player.pushBackward(collisionDamage);
-      enemy.pushBackward(collisionDamage);
+      var pushBackSpeed = (enemySpeed > playerSpeed ? enemySpeed : playerSpeed) * 1.5;
+      self.player.pushBackward(pushBackSpeed);
+      enemy.pushBackward(pushBackSpeed);
     }
 
     // Update enemy movement
