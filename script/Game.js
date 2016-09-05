@@ -55,13 +55,32 @@ Game.prototype.update = function()
 
     enemy.update();
 
+    var enemyBoundingCircle = enemy.getBoundingCircle();
+
     // Update enemy/glitch interaction
     if(self.player.isGlitching
         && enemy.canBeGlitched()
-        && self.player.isInGlitchRange(enemy.getBoundingCircle()))
+        && self.player.isInGlitchRange(enemyBoundingCircle))
     {
       self.player = enemy;
       return;
+    }
+
+    // Update enemy/player interaction
+    if(self.player.intersects(enemyBoundingCircle))
+    {
+      var enemySpeed = enemy.currentSpeed;
+      var playerSpeed = self.player.currentSpeed;
+
+      var collisionDamage = Math.abs(enemySpeed - playerSpeed);
+
+      // Damage both the player and enemy ship w/ the difference in their speeds
+      self.player.damage(collisionDamage);
+      enemy.damage(collisionDamage);
+
+      // Push both the enemy and player ship backwards
+      self.player.pushBackward(collisionDamage);
+      enemy.pushBackward(collisionDamage);
     }
 
     // Update enemy movement

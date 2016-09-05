@@ -65,6 +65,9 @@ function Ship(props) {
   this.isMovingForward = false;
   this.isMovingBackward = false;
 
+  // Pushing
+  this.pushSpeed = 0;
+
   // Glitching
   this.isGlitching = false;
   this.glitchRange = 75;
@@ -200,13 +203,18 @@ Ship.prototype.update = function() {
     }
   }
 
-  // Update ship movement
+  // Update weak status
+  this.isWeak = (this.health/this.maxHealth <= 0.3);
+
+  var isBeingPushed = (this.pushSpeed > 0);
+  var targetSpeed = isBeingPushed ? this.pushSpeed : this.currentSpeed;
+
   this.currentRadians = Utility.toRadians(this.rotationDegree);
-  this.currentVelocityY = this.currentSpeed * Math.cos(this.currentRadians);
-  this.currentVelocityX = this.currentSpeed * Math.sin(this.currentRadians);
+  this.currentVelocityY = targetSpeed * Math.cos(this.currentRadians);
+  this.currentVelocityX = targetSpeed * Math.sin(this.currentRadians);
 
   // Move forward
-  if(this.isMovingForward)
+  if(this.isMovingForward && !isBeingPushed)
   {
     // Move the ship forward
     this.y -= this.currentVelocityY;
@@ -214,7 +222,7 @@ Ship.prototype.update = function() {
   }
 
   // Move backward
-  if(this.isMovingBackward)
+  if(this.isMovingBackward || isBeingPushed)
   {
     // Move the ship backward
     this.y += this.currentVelocityY;
@@ -222,7 +230,11 @@ Ship.prototype.update = function() {
   }
 
   // Update acceleration
-  if(this.isMoving)
+  if(isBeingPushed)
+  {
+    this.pushSpeed -= this.acceleration;
+  }
+  else if(this.isMoving)
   {
     this.currentSpeed += this.acceleration;
 
@@ -231,9 +243,6 @@ Ship.prototype.update = function() {
       this.currentSpeed = this.maxSpeed;
     }
   }
-
-  // Update weak status
-  this.isWeak = (this.health/this.maxHealth <= 0.3);
 
 };
 
@@ -251,6 +260,13 @@ Ship.prototype.moveForward = function() {
 Ship.prototype.moveBackward = function() {
   this.isMoving = true;
   this.isMovingBackward = true;
+};
+
+/**
+ * Pushes the ship backward
+ */
+Ship.prototype.pushBackward = function(speed) {
+  this.pushSpeed = speed;
 };
 
 /**
