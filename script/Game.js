@@ -67,7 +67,7 @@ Game.prototype.update = function()
     }
 
     // Update enemy/player interaction
-    if(self.player.intersects(enemyBoundingCircle))
+    if(false && self.player.intersects(enemyBoundingCircle))
     {
       var enemySpeed = enemy.currentSpeed;
       var playerSpeed = self.player.currentSpeed;
@@ -84,12 +84,11 @@ Game.prototype.update = function()
     }
 
     // Update enemy movement
-    /*
     if(enemy.target === null)
     {
+      enemy.stop();
       enemy.target = Utility.getRandomPoint(self.player.x, self.player.y, 300);
     }
-    */
 
     // Update enemy/bullet interaction
     self.eachEntity(self.bullets, function(bullet, bulletIndex) {

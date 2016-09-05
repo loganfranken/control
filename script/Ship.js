@@ -198,7 +198,7 @@ Ship.prototype.update = function() {
     }
     else
     {
-      this.lookAt(this.target.x, this.target.y);
+      this.lookTowards(this.target.x, this.target.y);
       this.moveForward();
     }
   }
@@ -339,12 +339,26 @@ Ship.prototype.shoot = function() {
  * @param {integer} x - X-coordinate to look at
  * @param {integer} y - Y-coordinate to look at
  */
-Ship.prototype.lookAt = function(x, y) {
+Ship.prototype.lookTowards = function(x, y) {
 
   var targetX = this.x - x;
   var targetY = this.y - y;
 
-  this.rotationDegree = -Math.atan2(targetX, targetY) * (180/Math.PI);
+  var targetRotationDegree = -Math.atan2(targetX, targetY) * (180/Math.PI);
+
+  if(Utility.within(this.rotationDegree, targetRotationDegree, 2))
+  {
+    return;
+  }
+
+  if(this.rotationDegree > targetRotationDegree)
+  {
+    this.rotationDegree -= this.rotationSpeed;
+  }
+  else
+  {
+    this.rotationDegree += this.rotationSpeed;
+  }
 
 }
 
