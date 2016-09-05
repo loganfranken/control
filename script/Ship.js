@@ -74,7 +74,21 @@ function Ship(props) {
   this.bulletRange = props.bulletRange;
   this.bulletColor = props.bulletColor;
   this.bulletRadius = props.bulletRadius;
+  this.bulletDamage = props.bulletDamage;
   this.currentBulletDelay = 0;
+
+  // Health
+  this.maxHealth = props.health;
+  this.health = props.health;
+
+  // Weak
+  this.isWeak = false;
+  this.animMaxWeakCounter = 20;
+  this.animWeakCounter = 0;
+
+  // Hit
+  this.animMaxHitCounter = 5;
+  this.animHitCounter = 0;
 
   // Target
   this.target = null;
@@ -88,6 +102,8 @@ function Ship(props) {
  * @param {integer} mapCenterY - Y-coordinate of the map's center
  */
 Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
+
+  var damageColor = 'rgb(255, 255, 255)';
 
   context.save();
 
@@ -110,30 +126,51 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
     context.stroke();
   }
 
+  var showHit =  (this.animHitCounter > 0);
+
+  if(this.isWeak)
+  {
+    showHit = (this.isWeak && this.animWeakCounter > (this.animMaxWeakCounter/2));
+  }
+
   // Draw the body
-  context.fillStyle = this.bodyColor;
+  context.fillStyle = showHit ? damageColor : this.bodyColor;
   context.fillRect(-this.halfBodyWidth, -this.halfHeight, this.bodyWidth, this.bodyHeight);
 
   // Draw the wings
-  context.fillStyle = this.wingColor;
+  context.fillStyle = showHit ? damageColor : this.wingColor;
   context.fillRect(-this.halfBodyWidth - this.wingWidth, 0, this.wingWidth, this.wingHeight);
   context.fillRect(this.halfBodyWidth, 0, this.wingWidth, this.wingHeight);
 
   // Draw the cockpit
   if(this.hasCockpit)
   {
-    context.fillStyle = this.cockpitColor;
+    context.fillStyle = showHit ? damageColor : this.cockpitColor;
     context.fillRect(-this.halfCockpitWidth, 0, this.cockpitWidth, this.cockpitHeight);
   }
 
   // Draw the shuttle design
   if(this.hasShuttleDesign)
   {
-    context.fillStyle = this.shuttleDesignColor;
+    context.fillStyle = showHit ? damageColor : this.shuttleDesignColor;
     context.fillRect(-this.halfShuttleDesignWidth, -this.halfHeight, this.shuttleDesignWidth, this.shuttleDesignHeight);
   }
 
   context.restore();
+
+  if(this.isWeak)
+  {
+    this.animWeakCounter--;
+
+    if(this.animWeakCounter <= 0)
+    {
+      this.animWeakCounter = this.animMaxWeakCounter;
+    }
+  }
+  else if(showHit)
+  {
+    this.animHitCounter--;
+  }
 
 };
 
@@ -193,6 +230,9 @@ Ship.prototype.update = function() {
       this.currentSpeed = this.maxSpeed;
     }
   }
+
+  // Update weak status
+  this.isWeak = (this.health/this.maxHealth <= 0.3);
 
 };
 
@@ -308,7 +348,8 @@ Ship.prototype.getBullet = function() {
     speed: this.bulletSpeed,
     range: this.bulletRange,
     color: this.bulletColor,
-    radius: this.bulletRadius
+    radius: this.bulletRadius,
+    damage: this.bulletDamage
   });
 
 }
@@ -328,3 +369,22 @@ Ship.prototype.getBoundingCircle = function() {
   };
 
 };
+
+/**
+ * Damages the ship
+ * @param {number} damage - Amount of damage to detract from the ship's health
+ */
+Ship.prototype.damage = function(damage) {
+
+  this.health -= damage;
+  this.isHit = true;
+  this.animHitCounter = this.animMaxHitCounter;
+
+}
+
+/**
+ * Whether or not the ship has been destroyed
+ */
+Ship.prototype.isDestroyed = function() {
+  return this.health < 0;
+}

@@ -12,6 +12,7 @@ function Bullet(props) {
   this.range = props.range;
   this.color = props.color;
   this.radius = props.radius;
+  this.damage = props.damage;
 
 }
 

@@ -76,7 +76,14 @@ Game.prototype.update = function()
 
       if(enemy.intersects(bullet.getBoundingCircle()))
       {
-        self.enemies[enemyIndex] = null;
+        enemy.damage(bullet.damage);
+
+        if(enemy.isDestroyed())
+        {
+          // Destroy enemy
+          self.enemies[enemyIndex] = null;
+        }
+
         self.bullets[bulletIndex] = null;
       }
 

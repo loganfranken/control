@@ -25,8 +25,10 @@ ShipFactory.generateRandomShip = function(x, y)
   var bulletSpeed = Utility.getRandom(2, 4);
   var bulletRange = Utility.getRandomInt(80, 140);
   var bulletColor = Utility.getRandomColor();
-  var bulletRadius = Utility.getRandomInt(1, 3);
+  var bulletRadius = Utility.getRandomInt(2, 4);
   var bulletDelay = Utility.getRandomInt(20, 50);
+
+  var health = Utility.getRandomInt(20, 50);
 
   var shipProps = {
 
@@ -48,7 +50,10 @@ ShipFactory.generateRandomShip = function(x, y)
     bulletRange: bulletRange,
     bulletColor: bulletColor,
     bulletRadius: bulletRadius,
-    bulletDelay: bulletDelay
+    bulletDelay: bulletDelay,
+    bulletDamage: bulletRadius,
+
+    health: health
 
   };
 
