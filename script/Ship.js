@@ -39,6 +39,9 @@ function Ship(props) {
   this.halfBodyWidth = (this.bodyWidth/2);
   this.halfBodyHeight = (this.bodyHeight/2);
 
+  // Glitch Color
+  this.glitchColor = this.bodyColor.replace('rgb', 'rgba').replace(')', ', x)');
+
   // Cockpit Dimensions
   this.hasCockpit = props.hasCockpit;
   this.cockpitColor = props.cockpitColor;
@@ -66,6 +69,8 @@ function Ship(props) {
   // Glitching
   this.isGlitching = false;
   this.glitchRange = 75;
+  this.animGlitchCounter = 0;
+  this.animMaxGlitchCouner = 40;
 
   // Bullets
   this.bulletDelay = props.bulletDelay;
@@ -115,14 +120,24 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
   // Draw the glitch range
   if(this.isGlitching)
   {
-    context.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    var opacity = (this.animGlitchCounter/this.animMaxGlitchCouner)/8;
+    var currGlitchColor = this.glitchColor.replace('x', opacity);
+
+    context.fillStyle = currGlitchColor;
     context.beginPath();
     context.arc(0, 0, this.glitchRange, 0, 2 * Math.PI);
     context.fill();
 
     context.lineWidth = 3;
-    context.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    context.strokeStyle = currGlitchColor;
     context.stroke();
+
+    this.animGlitchCounter++;
+
+    if(this.animGlitchCounter > this.animMaxGlitchCouner)
+    {
+      this.animGlitchCounter = 0;
+    }
   }
 
   var showHit =  (this.animHitCounter > 0);
