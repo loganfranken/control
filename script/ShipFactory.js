@@ -11,6 +11,9 @@ ShipFactory.generateRandomShip = function(x, y)
   var width = Utility.getRandomInt(20, 40);
   var height = Utility.getRandomInt(20, 40);
 
+  var speed = Utility.getRandom(0.5, 3);
+  var rotationSpeed = Utility.getRandomInt(1, 3);
+
   var bodyWidthFactor = Utility.getRandomInt(3, 8);
   var wingWidthFactor = (10 - bodyWidthFactor)/2;
 
@@ -22,11 +25,11 @@ ShipFactory.generateRandomShip = function(x, y)
   var bodyWidth = width * (bodyWidthFactor * 0.1);
   var bodyHeight = height * Utility.getRandom(0.6, 1);
 
-  var bulletSpeed = Utility.getRandom(2, 4);
   var bulletRange = Utility.getRandomInt(80, 140);
   var bulletColor = Utility.getRandomColor();
   var bulletRadius = Utility.getRandomInt(2, 4);
   var bulletDelay = Utility.getRandomInt(20, 50);
+  var bulletSpeed = speed * Utility.getRandom(1, 3);
 
   var health = Utility.getRandomInt(20, 50);
 
@@ -38,6 +41,9 @@ ShipFactory.generateRandomShip = function(x, y)
     width: width,
     height: height,
 
+    speed: speed,
+    rotationSpeed: rotationSpeed,
+
     wingColor: wingColor,
     wingWidth: wingWidth,
     wingHeight: wingHeight,
@@ -46,7 +52,7 @@ ShipFactory.generateRandomShip = function(x, y)
     bodyWidth: bodyWidth,
     bodyHeight: bodyHeight,
 
-    bulletSpeed: bulletSpeed,
+    bulletSpeed: speed * 2,
     bulletRange: bulletRange,
     bulletColor: bulletColor,
     bulletRadius: bulletRadius,

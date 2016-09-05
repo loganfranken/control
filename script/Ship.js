@@ -18,13 +18,8 @@ function Ship(props) {
   this.currentVelocityX = 0;
 
   // Speed
-  this.maxSpeed = 4;
-  this.currentSpeed = 0;
-  this.currentDriftSpeed = 0;
-  this.rotationSpeed = 1;
-
-  // Acceleration
-  this.acceleration = 0.01;
+  this.speed = props.speed;
+  this.rotationSpeed = props.rotationSpeed;
 
   // Dimensions
   this.height = props.height;
@@ -220,7 +215,7 @@ Ship.prototype.update = function() {
   this.isWeak = (this.health/this.maxHealth <= 0.3);
 
   var isBeingPushed = (this.pushSpeed > 0);
-  var targetSpeed = isBeingPushed ? this.pushSpeed : this.currentSpeed;
+  var targetSpeed = isBeingPushed ? this.pushSpeed : this.speed;
 
   this.currentRadians = Utility.toRadians(this.rotationDegree);
   this.currentVelocityY = targetSpeed * Math.cos(this.currentRadians);
@@ -242,19 +237,10 @@ Ship.prototype.update = function() {
     this.x -= this.currentVelocityX;
   }
 
-  // Update acceleration
+  // Update push acceleration
   if(isBeingPushed)
   {
-    this.pushSpeed -= this.acceleration;
-  }
-  else if(this.isMoving)
-  {
-    this.currentSpeed += this.acceleration;
-
-    if(this.currentSpeed > this.maxSpeed)
-    {
-      this.currentSpeed = this.maxSpeed;
-    }
+    this.pushSpeed -= 0.1;
   }
 
 };
@@ -289,7 +275,6 @@ Ship.prototype.stop = function() {
   this.isMoving = false;
   this.isMovingForward = false;
   this.isMovingBackward = false;
-  this.currentSpeed = 0;
 };
 
 /**
