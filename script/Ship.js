@@ -29,6 +29,7 @@ function Ship(props) {
   // Dimensions
   this.height = props.height;
   this.width = props.width;
+  this.halfWidth = (this.width/2);
   this.halfHeight = (this.height/2);
 
   // Wing Dimensions
@@ -72,7 +73,7 @@ function Ship(props) {
   this.bulletSpeed = props.bulletSpeed;
   this.bulletRange = props.bulletRange;
   this.bulletColor = props.bulletColor;
-  this.bulletSize = props.bulletSize;
+  this.bulletRadius = props.bulletRadius;
   this.currentBulletDelay = 0;
 
   // Target
@@ -245,6 +246,15 @@ Ship.prototype.contains = function(x, y) {
 };
 
 /**
+ * Whether or not the ship intersects a given polygon
+ * @param {object} boundingCircle - Bounding circle to test intersection
+ */
+Ship.prototype.intersects = function(boundingCircle)
+{
+  return Utility.doCirclesIntersect(boundingCircle, this.getBoundingCircle());
+};
+
+/**
  * Whether or not the ship can shoot a bullet
  */
 Ship.prototype.canShoot = function() {
@@ -298,7 +308,23 @@ Ship.prototype.getBullet = function() {
     speed: this.bulletSpeed,
     range: this.bulletRange,
     color: this.bulletColor,
-    size: this.bulletSize
+    radius: this.bulletRadius
   });
 
 }
+
+/**
+ * Returns an array of points describing the ship's bounding circle
+ */
+Ship.prototype.getBoundingCircle = function() {
+
+  var size = this.width > this.height ? this.width : this.height;
+  var radius = (size/2);
+
+  return {
+    x: this.x,
+    y: this.y,
+    radius: radius
+  };
+
+};

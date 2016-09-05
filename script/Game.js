@@ -64,15 +64,17 @@ Game.prototype.update = function()
     */
 
     // Update enemy movement
+    /*
     if(enemy.target === null)
     {
       enemy.target = Utility.getRandomPoint(self.player.x, self.player.y, 300);
     }
+    */
 
     // Update enemy/bullet interaction
     self.eachEntity(self.bullets, function(bullet, bulletIndex) {
 
-      if(enemy.contains(bullet.x, bullet.y))
+      if(enemy.intersects(bullet.getBoundingCircle()))
       {
         self.enemies[enemyIndex] = null;
         self.bullets[bulletIndex] = null;

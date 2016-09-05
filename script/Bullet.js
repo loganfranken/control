@@ -11,7 +11,7 @@ function Bullet(props) {
   this.velocityY = props.speed * Math.cos(Utility.toRadians(props.rotationDegree));
   this.range = props.range;
   this.color = props.color;
-  this.size = props.size;
+  this.radius = props.radius;
 
 }
 
@@ -24,7 +24,7 @@ function Bullet(props) {
 Bullet.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
   context.beginPath();
-  context.arc(this.x + mapCenterX, this.y + mapCenterY, this.size, 0, 2 * Math.PI);
+  context.arc(this.x + mapCenterX, this.y + mapCenterY, this.radius, 0, 2 * Math.PI);
   context.fillStyle = this.color;
   context.fill();
 
@@ -38,5 +38,18 @@ Bullet.prototype.update = function() {
   this.y -= this.velocityY;
   this.x += this.velocityX;
   this.range--;
+
+};
+
+/**
+ * Returns an array of points describing the bullet's bounding circle
+ */
+Bullet.prototype.getBoundingCircle = function() {
+
+  return {
+    x: this.x,
+    y: this.y,
+    radius: this.radius
+  };
 
 };
