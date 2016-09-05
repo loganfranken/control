@@ -67,6 +67,7 @@ function Ship(props) {
 
   // Glitching
   this.isGlitching = false;
+  this.glitchRange = 75;
 
   // Bullets
   this.bulletDelay = props.bulletDelay;
@@ -113,12 +114,12 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
   context.beginPath();
   context.moveTo(0, 0);
 
-  // Draw the glitch sphere
+  // Draw the glitch range
   if(this.isGlitching)
   {
     context.fillStyle = 'rgba(255, 255, 255, 0.1)';
     context.beginPath();
-    context.arc(0, 0, 75, 0, 2 * Math.PI);
+    context.arc(0, 0, this.glitchRange, 0, 2 * Math.PI);
     context.fill();
 
     context.lineWidth = 3;
@@ -286,12 +287,21 @@ Ship.prototype.contains = function(x, y) {
 };
 
 /**
- * Whether or not the ship intersects a given polygon
+ * Whether or not the ship intersects a given bounding circle
  * @param {object} boundingCircle - Bounding circle to test intersection
  */
 Ship.prototype.intersects = function(boundingCircle)
 {
   return Utility.doCirclesIntersect(boundingCircle, this.getBoundingCircle());
+};
+
+/**
+ * Whether or not the ship's glitch range intersects a given bounding circle
+ * @param {object} boundingCircle - Bounding circle to test intersection
+ */
+Ship.prototype.isInGlitchRange = function(boundingCircle)
+{
+  return Utility.doCirclesIntersect(boundingCircle, this.getGlitchRangeBoundingCircle());
 };
 
 /**
@@ -337,6 +347,13 @@ Ship.prototype.stopGlitching = function() {
 }
 
 /**
+ * Whether or not the ship can be glitched
+ */
+Ship.prototype.canBeGlitched = function() {
+  return this.isWeak;
+}
+
+/**
  * Get a bullet entity
  */
 Ship.prototype.getBullet = function() {
@@ -366,6 +383,19 @@ Ship.prototype.getBoundingCircle = function() {
     x: this.x,
     y: this.y,
     radius: radius
+  };
+
+};
+
+/**
+ * Returns an array of points describing the ship's glitch range bounding circle
+ */
+Ship.prototype.getGlitchRangeBoundingCircle = function() {
+
+  return {
+    x: this.x,
+    y: this.y,
+    radius: this.glitchRange
   };
 
 };

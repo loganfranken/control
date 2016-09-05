@@ -37,6 +37,16 @@ Game.prototype.update = function()
   // Handle player input
   self.handlePlayerInput();
 
+  // Handle player glitching
+  if(self.isGlitchPressed)
+  {
+    self.player.startGlitching();
+  }
+  else if(self.player.isGlitching)
+  {
+    self.player.stopGlitching();
+  }
+
   // Update player
   self.player.update();
 
@@ -45,23 +55,14 @@ Game.prototype.update = function()
 
     enemy.update();
 
-    // Handle player glitching
-    if(self.isGlitchPressed)
+    // Update enemy/glitch interaction
+    if(self.player.isGlitching
+        && enemy.canBeGlitched()
+        && self.player.isInGlitchRange(enemy.getBoundingCircle()))
     {
-      self.player.startGlitching();
-    }
-    else if(self.player.isGlitching)
-    {
-      self.player.stopGlitching();
-    }
-    /*
-    if(!self.hasGlitched && self.isGlitchPressed && enemy.contains(self.player.x, self.player.y))
-    {
-      self.enemies.push(self.player);
       self.player = enemy;
-      self.hasGlitched = true;
+      return;
     }
-    */
 
     // Update enemy movement
     /*
@@ -86,7 +87,6 @@ Game.prototype.update = function()
 
         self.bullets[bulletIndex] = null;
       }
-
     });
 
   });
