@@ -162,6 +162,19 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
   context.restore();
 
+  // Draw the health bar
+  context.save();
+  context.translate(this.x + mapCenterX, this.y + mapCenterY);
+
+  context.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+  context.strokeRect(-20, this.halfHeight + 10, 40, 5);
+
+  context.fillStyle = 'rgba(255, 255, 255, 0.6)';
+  context.fillRect(-20, this.halfHeight + 10, 40 * (this.health/this.maxHealth), 5);
+
+  context.restore();
+
+  // Update animation counters
   if(this.isWeak)
   {
     this.animWeakCounter--;

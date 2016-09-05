@@ -67,7 +67,7 @@ Game.prototype.update = function()
     }
 
     // Update enemy/player interaction
-    if(false && self.player.intersects(enemyBoundingCircle))
+    if(self.player.intersects(enemyBoundingCircle))
     {
       var enemySpeed = enemy.currentSpeed;
       var playerSpeed = self.player.currentSpeed;
