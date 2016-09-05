@@ -23,6 +23,7 @@ function Ship(props) {
   // Speed
   this.speed = props.speed;
   this.rotationSpeed = props.rotationSpeed;
+  this.velocityDiff = { x: 0, y: 0 };
 
   // Dimensions
   this.height = props.height;

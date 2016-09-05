@@ -48,8 +48,16 @@ Game.prototype.update = function()
     self.player.stopGlitching();
   }
 
+  // Cache player coordinates to re-center the map
+  var oldPlayerX = self.player.x;
+  var oldPlayerY = self.player.y;
+
   // Update player
   self.player.update();
+
+  // Re-center the map
+  self.mapCenterX -= (self.player.x - oldPlayerX);
+  self.mapCenterY -= (self.player.y - oldPlayerY);
 
   // Update enemies
   self.eachEntity(self.enemies, function(enemy, enemyIndex) {
@@ -187,15 +195,15 @@ Game.prototype.handlePlayerInput = function() {
   if(this.isUpPressed)
   {
     this.player.moveForward();
-    this.mapCenterY += this.player.currentVelocityY;
-    this.mapCenterX -= this.player.currentVelocityX;
+    //this.mapCenterY += this.player.currentVelocityY;
+    //this.mapCenterX -= this.player.currentVelocityX;
   }
 
   if(this.isDownPressed)
   {
     this.player.moveBackward();
-    this.mapCenterY -= this.player.currentVelocityY;
-    this.mapCenterX += this.player.currentVelocityX;
+    //this.mapCenterY -= this.player.currentVelocityY;
+    //this.mapCenterX += this.player.currentVelocityX;
   }
 
   if(!this.isUpPressed && !this.isDownPressed)
