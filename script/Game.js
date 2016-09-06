@@ -27,11 +27,15 @@ function Game(canvas)
   this.items = [];
   this.explosions = [];
 
+  this.boundarySize = 3000;
+  this.halfBoundarySize = (this.boundarySize/2);
+
   this.stars = [];
 
-  for(var i=0; i<1000; i++)
+  // Generate the star field
+  for(var i=0; i<this.boundarySize; i++)
   {
-    var point = Utility.getRandomPoint(0, 0, 1000);
+    var point = Utility.getRandomPoint(0, 0, this.boundarySize);
     var opacity = Utility.getRandom(0.1, 1);
     this.stars.push({ x: point.x, y: point.y, opacity: opacity });
   }
@@ -364,6 +368,16 @@ Game.prototype.draw = function()
 
   // Clear the canvas
   self.context.clearRect(0, 0, self.canvasWidth, self.canvasHeight);
+
+  // Draw the boundary
+  self.context.strokeStyle = 'rgba(255, 0, 0, 0.3)';
+  self.context.lineWidth = 1;
+  self.context.strokeRect(
+    -this.halfBoundarySize + this.mapCenterX,
+    -this.halfBoundarySize + this.mapCenterY,
+    this.boundarySize,
+    this.boundarySize
+  );
 
   // Draw the stars
   self.drawStars(self.context);
