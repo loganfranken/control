@@ -27,7 +27,7 @@ function Game(canvas)
   this.items = [];
   this.explosions = [];
 
-  this.boundarySize = 3000;
+  this.boundarySize = 2000;
   this.halfBoundarySize = (this.boundarySize/2);
 
   this.stars = [];
@@ -86,6 +86,14 @@ Game.prototype.update = function()
 
     enemy.update();
 
+    if(enemy.isDestroyed())
+    {
+      // Destroy enemy
+      self.enemies[enemyIndex] = null;
+      self.explosions.push(new Explosion(enemy.x, enemy.y, enemy.bodyColor));
+      return;
+    }
+
     var enemyBoundingCircle = enemy.getBoundingCircle();
 
     // Update enemy/glitch interaction
@@ -94,9 +102,7 @@ Game.prototype.update = function()
         && enemy.canBeGlitched()
         && self.player.isInGlitchRange(enemyBoundingCircle))
     {
-      // Cache player coordinates to re-center the map
-      var oldPlayerX = self.player.x;
-      var oldPlayerY = self.player.y;
+      self.cachePlayerCoordinates();
 
       // Trigger an explosion where the old ship was located
       self.explosions.push(new Explosion(self.player.x, self.player.y, self.player.bodyColor));
@@ -108,9 +114,7 @@ Game.prototype.update = function()
       // Reset the player's health
       self.player.health = self.player.maxHealth;
 
-      // Re-center the map
-      self.mapCenterX -= (self.player.x - oldPlayerX);
-      self.mapCenterY -= (self.player.y - oldPlayerY);
+      self.recenterMap();
 
       return;
     }
@@ -134,14 +138,6 @@ Game.prototype.update = function()
 
       if(enemy.id === otherEnemy.id)
       {
-        return;
-      }
-
-      if(enemy.isDestroyed())
-      {
-        // Destroy enemy
-        self.enemies[enemyIndex] = null;
-        self.explosions.push(new Explosion(enemy.x, enemy.y, enemy.bodyColor));
         return;
       }
 
@@ -205,6 +201,9 @@ Game.prototype.update = function()
       self.handleBulletInteraction(bullet, enemy, bulletIndex);
     });
 
+    // Update the enemy's interaction with the game boundary
+    self.handleBoundaryInteraction(enemy);
+
   });
 
   // Update bullets
@@ -247,6 +246,14 @@ Game.prototype.update = function()
     }
 
   });
+
+  // Prevent player from leaving boundary
+  if(self.player != null)
+  {
+    self.cachePlayerCoordinates();
+    self.handleBoundaryInteraction(self.player);
+    self.recenterMap();
+  }
 
   // Condense the entity arrays, removing the nulls
   self.bullets = Utility.condense(self.bullets);
@@ -297,6 +304,49 @@ Game.prototype.handleBulletInteraction = function(bullet, entity, bulletIndex) {
     this.bullets[bulletIndex] = null;
   }
 
+}
+
+/**
+ * Handles the interaction between an entity and the game boundary
+ * @param {object} entity - Entity to test in the interaction
+ */
+Game.prototype.handleBoundaryInteraction = function(entity)
+{
+  if(entity.x > this.halfBoundarySize)
+  {
+    entity.x = this.halfBoundarySize;
+  }
+
+  if(entity.x < -this.halfBoundarySize)
+  {
+    entity.x = -this.halfBoundarySize;
+  }
+
+  if(entity.y > this.halfBoundarySize)
+  {
+    entity.y = this.halfBoundarySize;
+  }
+
+  if(entity.y < -this.halfBoundarySize)
+  {
+    entity.y = -this.halfBoundarySize;
+  }
+}
+
+/**
+ * Caches the player's current coordinates for use in re-centering the map
+ */
+Game.prototype.cachePlayerCoordinates = function() {
+  this.cachedPlayerX = this.player.x;
+  this.cachedPlayerY = this.player.y;
+}
+
+/**
+ * Recenters the map using a player's cached coordinates for reference
+ */
+Game.prototype.recenterMap = function() {
+  this.mapCenterX -= (this.player.x - this.cachedPlayerX);
+  this.mapCenterY -= (this.player.y - this.cachedPlayerY);
 }
 
 /**
