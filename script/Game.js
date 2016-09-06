@@ -176,18 +176,7 @@ Game.prototype.update = function()
 
     // Update enemy/bullet interaction
     self.eachEntity(self.bullets, function(bullet, bulletIndex) {
-
-      // No friendly fire
-      if(bullet.sourceId === enemy.id)
-      {
-        return;
-      }
-
-      if(enemy.intersects(bullet.getBoundingCircle()))
-      {
-        enemy.damage(bullet.damage);
-        self.bullets[bulletIndex] = null;
-      }
+      self.handleBulletInteraction(bullet, enemy, bulletIndex);
     });
 
   });
@@ -202,6 +191,8 @@ Game.prototype.update = function()
     {
       self.bullets[bulletIndex] = null;
     }
+
+    self.handleBulletInteraction(bullet, self.player, bulletIndex);
 
   });
 
@@ -256,6 +247,26 @@ Game.prototype.handleCollision = function(entityA, entityB) {
   var pushBackSpeed = (entityASpeed > entityBSpeed ? entityASpeed : entityBSpeed) * 1.5;
   entityA.pushBackward(pushBackSpeed);
   entityB.pushBackward(pushBackSpeed);
+
+}
+
+/**
+ * Handles the testing of interaction between bullet and entity
+ * @param {object} bullet - Bullet to use in testing the interaction
+ * @param {object} entity - Entity to use in testing the interaction
+ */
+Game.prototype.handleBulletInteraction = function(bullet, entity, bulletIndex) {
+
+  if(bullet.sourceId === entity.id)
+  {
+    return;
+  }
+
+  if(entity.intersects(bullet.getBoundingCircle()))
+  {
+    entity.damage(bullet.damage);
+    this.bullets[bulletIndex] = null;
+  }
 
 }
 
