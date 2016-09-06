@@ -33,7 +33,7 @@ ShipFactory.generateRandomShip = function(x, y)
 
   var health = Utility.getRandomInt(20, 50);
 
-  var behavior = Utility.getRandomInt(0, 2);
+  var behavior = Utility.getRandomInt(1, 3);
 
   var shipProps = {
 

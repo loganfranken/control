@@ -1,9 +1,11 @@
 /**
  * The game
  * @constructor
- * @param {HTMLCanvasElement} canvas  - Canvas for displaying the game
+ * @param {HTMLCanvasElement} canvas - Canvas for displaying the game
+ * @param {HTMLCanvasElement} instructions - Elemement for displaying game instructions
+ * @param {HTMLCanvasElement} narrative - Elemement for displaying game narrative
  */
-function Game(canvas)
+function Game(canvas, instructions, narrative)
 {
   this.canvas = canvas;
   this.context = canvas.getContext("2d");
@@ -39,6 +41,14 @@ function Game(canvas)
     var opacity = Utility.getRandom(0.1, 1);
     this.stars.push({ x: point.x, y: point.y, opacity: opacity });
   }
+
+  this.instructions = instructions;
+  this.isInTutorial = true;
+  this.currentTutorialStage = 0;
+  this.hasMoved = false;
+  this.hasShot = false;
+  this.hasGlitched = false;
+  this.hasGlitchedShip = false;
 }
 
 /**
@@ -48,6 +58,10 @@ Game.prototype.update = function()
 {
   var self = this;
 
+  // Update tutorial
+  self.updateTutorial();
+
+  // Update player destruction
   if(self.player != null && self.player.isDestroyed())
   {
     self.explosions.push(new Explosion(self.player.x, self.player.y, self.player.bodyColor));
@@ -116,6 +130,7 @@ Game.prototype.update = function()
 
       self.recenterMap();
 
+      self.hasGlitchedShip = true;
       return;
     }
 
@@ -357,11 +372,13 @@ Game.prototype.handlePlayerInput = function() {
   if(this.isUpPressed)
   {
     this.player.moveForward();
+    this.hasMoved = true;
   }
 
   if(this.isDownPressed)
   {
     this.player.moveBackward();
+    this.hasMoved = true;
   }
 
   if(!this.isUpPressed && !this.isDownPressed)
@@ -372,17 +389,25 @@ Game.prototype.handlePlayerInput = function() {
   if(this.isRightPressed)
   {
     this.player.rotateClockwise();
+    this.hasMoved = true;
   }
 
   if(this.isLeftPressed)
   {
     this.player.rotateCounterClockwise();
+    this.hasMoved = true;
   }
 
   if(this.isShootPressed && this.player.canShoot())
   {
     this.bullets.push(this.player.getBullet());
     this.player.shoot();
+    this.hasShot = true;
+  }
+
+  if(this.isGlitchPressed)
+  {
+    this.hasGlitched = true;
   }
 
 };
@@ -487,6 +512,44 @@ Game.prototype.drawEntitites = function(entities)
 }
 
 /**
+ * Updates the tutorial
+ */
+Game.prototype.updateTutorial = function()
+{
+  if(!this.isInTutorial)
+  {
+    return;
+  }
+
+  if(this.currentTutorialStage === 0 && this.hasMoved)
+  {
+    this.currentTutorialStage++;
+    narrative.innerText = 'we must destroy';
+    instructions.innerText = 'shoot with [X]';
+  }
+
+  if(this.currentTutorialStage === 1 && this.hasShot)
+  {
+    this.currentTutorialStage++;
+    narrative.innerText = 'we must conquer';
+    instructions.innerText = 'glitch with [Z]';
+  }
+
+  if(this.currentTutorialStage === 2 && this.hasGlitched)
+  {
+    this.currentTutorialStage++;
+    narrative.innerText = 'we must control';
+    instructions.innerText = 'glitch a weak ship to take control';
+  }
+
+  if(this.currentTutorialStage === 3 && this.hasGlitchedShip)
+  {
+    this.isInTutorial = false;
+    instructions.parentNode.setAttribute('style', 'opacity: 0');
+  }
+}
+
+/**
  * Starts the game
  */
 Game.prototype.start = function()
@@ -532,20 +595,17 @@ Game.prototype.start = function()
     }
   }
 
+  // Generate initial ship
+  var ship = ShipFactory.generateRandomShip(-400, 0);
+  ship.behavior = ShipBehavior.None;
+  this.enemies.push(ship);
+
   function loop()
   {
     self.update();
     self.draw();
     requestAnimationFrame(loop);
   }
-
-  // Add mock enemies for testing
-  this.enemies.push(ShipFactory.generateRandomShip(150, 150));
-  this.enemies.push(ShipFactory.generateRandomShip(200, 200));
-
-  // Add mock items for testing
-  this.items.push(new Item(300, 300));
-  this.items.push(new Item(50, 50));
 
   loop();
 }
