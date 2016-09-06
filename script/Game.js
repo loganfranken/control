@@ -111,6 +111,14 @@ Game.prototype.update = function()
         return;
       }
 
+      if(enemy.isDestroyed())
+      {
+        // Destroy enemy
+        self.enemies[enemyIndex] = null;
+        self.explosions.push(new Explosion(enemy.x, enemy.y, enemy.bodyColor));
+        return;
+      }
+
       var otherEnemyBoundingCircle = otherEnemy.getBoundingCircle();
 
       // Update enemy/enemy collisions
@@ -178,14 +186,6 @@ Game.prototype.update = function()
       if(enemy.intersects(bullet.getBoundingCircle()))
       {
         enemy.damage(bullet.damage);
-
-        if(enemy.isDestroyed())
-        {
-          // Destroy enemy
-          self.enemies[enemyIndex] = null;
-          self.explosions.push(new Explosion(enemy.x, enemy.y, enemy.bodyColor));
-        }
-
         self.bullets[bulletIndex] = null;
       }
     });
