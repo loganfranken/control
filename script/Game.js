@@ -26,6 +26,15 @@ function Game(canvas)
   this.enemies = [];
   this.items = [];
   this.explosions = [];
+
+  this.stars = [];
+
+  for(var i=0; i<1000; i++)
+  {
+    var point = Utility.getRandomPoint(0, 0, 1000);
+    var opacity = Utility.getRandom(0.1, 1);
+    this.stars.push({ x: point.x, y: point.y, opacity: opacity });
+  }
 }
 
 /**
@@ -356,6 +365,9 @@ Game.prototype.draw = function()
   // Clear the canvas
   self.context.clearRect(0, 0, self.canvasWidth, self.canvasHeight);
 
+  // Draw the stars
+  self.drawStars(self.context);
+
   // Draw bullets
   self.drawEntitites(self.bullets);
 
@@ -373,6 +385,22 @@ Game.prototype.draw = function()
   {
     self.player.draw(self.context, self.mapCenterX, self.mapCenterY);
   }
+}
+
+/**
+ * Renders the ship
+ * @param {CanvasRenderingContext2D} context - 2D rendering context to use when rendering the stars
+ */
+Game.prototype.drawStars = function(context) {
+
+  var starsLength = this.stars.length;
+  for(var i=0; i<starsLength; i++)
+  {
+    var star = this.stars[i];
+    context.fillStyle = 'rgba(255, 255, 255, ' + star.opacity + ')';
+    context.fillRect(star.x + this.mapCenterX, star.y + this.mapCenterY, 1, 1);
+  }
+
 }
 
 /**
