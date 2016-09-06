@@ -444,6 +444,7 @@ Game.prototype.start = function()
   {
     self.update();
     self.draw();
+    requestAnimationFrame(loop);
   }
 
   // Add mock enemies for testing
@@ -454,6 +455,5 @@ Game.prototype.start = function()
   this.items.push(new Item(300, 300));
   this.items.push(new Item(50, 50));
 
-  window.setInterval(loop, 10);
   loop();
 }
