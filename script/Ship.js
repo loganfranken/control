@@ -339,26 +339,7 @@ Ship.prototype.shoot = function() {
  * @param {integer} y - Y-coordinate to look at
  */
 Ship.prototype.lookTowards = function(x, y) {
-
-  var targetX = this.x - x;
-  var targetY = this.y - y;
-
-  var targetRotationDegree = -Math.atan2(targetX, targetY) * (180/Math.PI);
-
-  if(Utility.within(this.rotationDegree, targetRotationDegree, 2))
-  {
-    return;
-  }
-
-  if(this.rotationDegree > targetRotationDegree)
-  {
-    this.rotationDegree -= this.rotationSpeed;
-  }
-  else
-  {
-    this.rotationDegree += this.rotationSpeed;
-  }
-
+  this.look(x, y, -1);
 }
 
 /**
@@ -367,11 +348,21 @@ Ship.prototype.lookTowards = function(x, y) {
  * @param {integer} y - Y-coordinate to look at
  */
 Ship.prototype.lookAwayFrom = function(x, y) {
+  this.look(x, y, 1);
+}
+
+/**
+ * Rotates the ship to either look towards or away from the given coordinates
+ * @param {integer} x - X-coordinate to look at
+ * @param {integer} y - Y-coordinate to look at
+ * @param {integer} direction - +1 (look away) or -1 (look towards)
+ */
+Ship.prototype.look = function(x, y, direction) {
 
   var targetX = this.x - x;
   var targetY = this.y - y;
 
-  var targetRotationDegree = Math.atan2(targetX, targetY) * (180/Math.PI);
+  var targetRotationDegree = (direction) * Math.atan2(targetX, targetY) * (180/Math.PI);
 
   if(Utility.within(this.rotationDegree, targetRotationDegree, 2))
   {
