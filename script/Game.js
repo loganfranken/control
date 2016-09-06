@@ -35,29 +35,38 @@ Game.prototype.update = function()
 {
   var self = this;
 
-  // Handle player input
-  self.handlePlayerInput();
-
-  // Handle player glitching
-  if(self.isGlitchPressed)
+  if(self.player != null && self.player.isDestroyed())
   {
-    self.player.startGlitching();
-  }
-  else if(self.player.isGlitching)
-  {
-    self.player.stopGlitching();
+    self.explosions.push(new Explosion(self.player.x, self.player.y, self.player.bodyColor));
+    self.player = null;
   }
 
-  // Cache player coordinates to re-center the map
-  var oldPlayerX = self.player.x;
-  var oldPlayerY = self.player.y;
+  if(self.player != null)
+  {
+    // Handle player input
+    self.handlePlayerInput();
 
-  // Update player
-  self.player.update();
+    // Handle player glitching
+    if(self.isGlitchPressed)
+    {
+      self.player.startGlitching();
+    }
+    else if(self.player.isGlitching)
+    {
+      self.player.stopGlitching();
+    }
 
-  // Re-center the map
-  self.mapCenterX -= (self.player.x - oldPlayerX);
-  self.mapCenterY -= (self.player.y - oldPlayerY);
+    // Cache player coordinates to re-center the map
+    var oldPlayerX = self.player.x;
+    var oldPlayerY = self.player.y;
+
+    // Update player
+    self.player.update();
+
+    // Re-center the map
+    self.mapCenterX -= (self.player.x - oldPlayerX);
+    self.mapCenterY -= (self.player.y - oldPlayerY);
+  }
 
   // Update enemies
   self.eachEntity(self.enemies, function(enemy, enemyIndex) {
@@ -67,7 +76,8 @@ Game.prototype.update = function()
     var enemyBoundingCircle = enemy.getBoundingCircle();
 
     // Update enemy/glitch interaction
-    if(self.player.isGlitching
+    if(self.player != null
+        && self.player.isGlitching
         && enemy.canBeGlitched()
         && self.player.isInGlitchRange(enemyBoundingCircle))
     {
@@ -92,16 +102,19 @@ Game.prototype.update = function()
       return;
     }
 
-    // Update enemy/player collisions
-    if(self.player.intersects(enemyBoundingCircle))
+    if(self.player != null)
     {
-      self.handleCollision(self.player, enemy);
-    }
+      // Update enemy/player collisions
+      if(self.player.intersects(enemyBoundingCircle))
+      {
+        self.handleCollision(self.player, enemy);
+      }
 
-    // Update enemy/player sighting
-    if(enemy.behavior == ShipBehavior.Aggressive && enemy.isInSightRange(self.player.getBoundingCircle()))
-    {
-      enemy.target = self.player;
+      // Update enemy/player sighting
+      if(enemy.behavior == ShipBehavior.Aggressive && enemy.isInSightRange(self.player.getBoundingCircle()))
+      {
+        enemy.target = self.player;
+      }
     }
 
     self.eachEntity(self.enemies, function(otherEnemy) {
@@ -168,7 +181,7 @@ Game.prototype.update = function()
       }
     }
 
-    if(enemy.behavior === ShipBehavior.Fearful)
+    if(self.player != null && enemy.behavior === ShipBehavior.Fearful)
     {
       enemy.lookAwayFrom(self.player.x, self.player.y);
       enemy.moveForward();
@@ -192,7 +205,10 @@ Game.prototype.update = function()
       self.bullets[bulletIndex] = null;
     }
 
-    self.handleBulletInteraction(bullet, self.player, bulletIndex);
+    if(self.player != null)
+    {
+      self.handleBulletInteraction(bullet, self.player, bulletIndex);
+    }
 
   });
 
@@ -202,7 +218,7 @@ Game.prototype.update = function()
     item.update();
 
     // Update player/item interaction
-    if(self.player.contains(item.x, item.y))
+    if(self.player != null && self.player.contains(item.x, item.y))
     {
       self.items[itemIndex] = null;
     }
@@ -353,7 +369,10 @@ Game.prototype.draw = function()
   self.drawEntitites(self.explosions);
 
   // Draw the player
-  self.player.draw(self.context, self.mapCenterX, self.mapCenterY);
+  if(self.player != null)
+  {
+    self.player.draw(self.context, self.mapCenterX, self.mapCenterY);
+  }
 }
 
 /**
