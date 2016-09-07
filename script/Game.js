@@ -291,8 +291,11 @@ Game.prototype.handleCollision = function(entityA, entityB) {
   var collisionDamage = Math.abs(entityASpeed - entityBSpeed);
 
   // Damage both the player and enemy ship w/ the difference in their speeds
-  entityA.damage(collisionDamage);
-  entityB.damage(collisionDamage);
+  if(!entityA.isTutorialShip && !entityB.isTutorialShip)
+  {
+    entityA.damage(collisionDamage);
+    entityB.damage(collisionDamage);
+  }
 
   // Push both the enemy and player ship backwards
   var pushBackSpeed = (entityASpeed > entityBSpeed ? entityASpeed : entityBSpeed) * 1.5;

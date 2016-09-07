@@ -27,7 +27,6 @@ canvas:focus
   position: absolute;
   text-align: center;
   text-transform: lowercase;
-  transition: opacity 3s;
   top: 0;
   width: 100%;
 }
