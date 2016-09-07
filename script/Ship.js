@@ -74,7 +74,7 @@ function Ship(props) {
   this.isGlitching = false;
   this.glitchRange = 75;
   this.animGlitchCounter = 0;
-  this.animMaxGlitchCouner = 40;
+  this.animMaxGlitchCouner = 10;
 
   // Bullets
   this.bulletDelay = props.bulletDelay;
@@ -144,7 +144,7 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
 
     if(this.animGlitchCounter > this.animMaxGlitchCouner)
     {
-      this.animGlitchCounter = 0;
+      this.animGlitchCounter = this.animMaxGlitchCouner;
     }
   }
 
@@ -393,6 +393,7 @@ Ship.prototype.startGlitching = function() {
  */
 Ship.prototype.stopGlitching = function() {
   this.isGlitching = false;
+  this.animGlitchCounter = 0;
 }
 
 /**
