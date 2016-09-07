@@ -57,6 +57,16 @@ function Game(canvas, instructions, narrative, score, highScore)
   this.highScoreDisplay = highScore;
   this.currentScore = 0;
   this.highScore = 0;
+
+  // Retrieve the high score from cache
+  var cachedHighScore = localStorage.getItem('highScore');
+
+  if(cachedHighScore)
+  {
+    this.highScore = cachedHighScore;
+  }
+
+  this.increaseScore(0);
 }
 
 /**
@@ -572,6 +582,10 @@ Game.prototype.updateTutorial = function()
   }
 }
 
+/**
+ * Increase the player's score
+ * @param {integer} value - Value by which to increase the player's score
+ */
 Game.prototype.increaseScore = function(value) {
 
   // Increase score
@@ -580,6 +594,7 @@ Game.prototype.increaseScore = function(value) {
   if(this.currentScore > this.highScore)
   {
     this.highScore = this.currentScore;
+    window.localStorage.setItem('highScore', this.highScore);
   }
 
   // Display score
