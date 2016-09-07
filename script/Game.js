@@ -598,6 +598,9 @@ Game.prototype.start = function()
   // Generate initial ship
   var ship = ShipFactory.generateRandomShip(-400, 0);
   ship.behavior = ShipBehavior.None;
+  ship.isTutorialShip = true;
+  ship.health *= 0.5;
+
   this.enemies.push(ship);
 
   function loop()

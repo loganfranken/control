@@ -86,6 +86,7 @@ function Ship(props) {
   this.currentBulletDelay = 0;
 
   // Health
+  this.canBeDestroyed = props.canBeDestroyed;
   this.maxHealth = props.health;
   this.health = props.health;
 
@@ -189,7 +190,7 @@ Ship.prototype.draw = function(context, mapCenterX, mapCenterY) {
   context.strokeRect(-20, this.halfHeight + 10, 40, 5);
 
   context.fillStyle = 'rgba(255, 255, 255, 0.6)';
-  context.fillRect(-20, this.halfHeight + 10, 40 * (this.health/this.maxHealth), 5);
+  context.fillRect(-20, this.halfHeight + 10, 40 * ((this.health > 0 ? this.health: 0)/this.maxHealth), 5);
 
   context.restore();
 
@@ -496,5 +497,5 @@ Ship.prototype.damage = function(damage) {
  * Whether or not the ship has been destroyed
  */
 Ship.prototype.isDestroyed = function() {
-  return this.health < 0;
+  return !this.isTutorialShip && this.health < 0;
 }
