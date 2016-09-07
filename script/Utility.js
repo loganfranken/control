@@ -107,10 +107,9 @@ Utility.condense = function(items)
  */
 Utility.doCirclesIntersect = function(circleA, circleB) {
 
-  var radiiDiff = Math.pow(circleA.radius - circleB.radius, 2);
   var radiiSum = Math.pow(circleA.radius + circleB.radius, 2);
   var centerDiff = Math.pow(circleA.x - circleB.x, 2) + Math.pow(circleA.y - circleB.y, 2);
 
-  return (radiiDiff <= centerDiff) && (centerDiff <= radiiSum);
+  return (centerDiff <= radiiSum);
 
 };
