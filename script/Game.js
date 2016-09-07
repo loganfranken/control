@@ -175,12 +175,6 @@ Game.prototype.update = function()
       {
         self.handleCollision(self.player, enemy);
       }
-
-      // Update enemy/player sighting
-      if(enemy.isInSightRange(self.player.getBoundingCircle()))
-      {
-        enemy.target = self.player;
-      }
     }
 
     self.eachEntity(self.enemies, function(otherEnemy) {
@@ -203,31 +197,26 @@ Game.prototype.update = function()
         return;
       }
 
-      // Update enemy/enemy sighting
-      if(enemy.isInSightRange(otherEnemyBoundingCircle))
-      {
-        enemy.target = otherEnemy;
-      }
-
     });
 
     if(!enemy.isTutorialShip)
     {
-      if(enemy.target != null)
-      {
-        enemy.lookTowards(enemy.target.x, enemy.target.y);
-        enemy.moveForward();
+      var randomIndex = Utility.getRandomInt(0, 10);
 
-        if(enemy.canShoot())
-        {
-          self.bullets.push(enemy.getBullet());
-          enemy.shoot();
-        }
-      }
-      else
+      // Rotate the ship
+      if(randomIndex === 0)
       {
-        // Otherwise, just make the ship move forward
-        enemy.moveForward();
+        enemy.rotateClockwise(enemy.rotationSpeed);
+      }
+
+      // Move the ship
+      enemy.moveForward();
+
+      // Fire the ship's bullets
+      if(randomIndex%2 === 0 && enemy.canShoot())
+      {
+        self.bullets.push(enemy.getBullet());
+        enemy.shoot();
       }
     }
 
@@ -298,7 +287,7 @@ Game.prototype.update = function()
   // Generate new enemies
   if(!self.isInTutorial && self.enemies.length < this.currentEnemyMax)
   {
-    var newEnemyPoint = Utility.getRandomPoint(0, 0, this.boundarySize);
+    var newEnemyPoint = Utility.getRandomPoint(0, 0, this.halfBoundarySize);
     self.enemies.push(ShipFactory.generateRandomShip(newEnemyPoint.x, newEnemyPoint.y));
   }
 
@@ -379,30 +368,24 @@ Game.prototype.handleBulletInteraction = function(bullet, entity, bulletIndex) {
  */
 Game.prototype.handleBoundaryInteraction = function(entity)
 {
-  var hitBoundary = false;
-
   if(entity.x > this.halfBoundarySize)
   {
     entity.x = this.halfBoundarySize;
-    hitBoundary = true;
   }
 
   if(entity.x < -this.halfBoundarySize)
   {
     entity.x = -this.halfBoundarySize;
-    hitBoundary = true;
   }
 
   if(entity.y > this.halfBoundarySize)
   {
     entity.y = this.halfBoundarySize;
-    hitBoundary = true;
   }
 
   if(entity.y < -this.halfBoundarySize)
   {
     entity.y = -this.halfBoundarySize;
-    hitBoundary = true;
   }
 }
 

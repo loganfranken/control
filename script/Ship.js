@@ -100,11 +100,6 @@ function Ship(props) {
   this.animMaxHitCounter = 5;
   this.animHitCounter = 0;
 
-  // Behavior
-  this.behavior = props.behavior;
-  this.sightRange = 200;
-  this.target = null;
-
 }
 
 /**
@@ -304,15 +299,6 @@ Ship.prototype.rotateCounterClockwise = function() {
 };
 
 /**
- * Determines whether or not the ship contains the given point
- * @param {integer} x - X-coordinate to test
- * @param {integer} y - Y-coordinate to test
- */
-Ship.prototype.contains = function(x, y) {
-  return (x > this.x - this.width) && (x < this.x + this.width) && (y > this.y - this.height) && (y < this.y + this.height);
-};
-
-/**
  * Whether or not the ship intersects a given bounding circle
  * @param {object} boundingCircle - Bounding circle to test intersection
  */
@@ -342,15 +328,6 @@ Ship.prototype.shoot = function() {
  */
 Ship.prototype.lookTowards = function(x, y) {
   this.look(x, y, -1);
-}
-
-/**
- * Rotates the ship to face away from the specified point
- * @param {integer} x - X-coordinate to look at
- * @param {integer} y - Y-coordinate to look at
- */
-Ship.prototype.lookAwayFrom = function(x, y) {
-  this.look(x, y, 1);
 }
 
 /**
@@ -457,28 +434,6 @@ Ship.prototype.getGlitchRangeBoundingCircle = function() {
     x: this.x,
     y: this.y,
     radius: this.glitchRange
-  };
-
-};
-
-/**
- * Whether or not the ship's sight range intersects a given bounding circle
- * @param {object} boundingCircle - Bounding circle to test intersection
- */
-Ship.prototype.isInSightRange = function(boundingCircle)
-{
-  return Utility.doCirclesIntersect(boundingCircle, this.getSightBoundingCircle());
-};
-
-/**
- * Returns an object describing the ship's sight range bounding circle
- */
-Ship.prototype.getSightBoundingCircle = function() {
-
-  return {
-    x: this.x,
-    y: this.y,
-    radius: this.sightRange
   };
 
 };
