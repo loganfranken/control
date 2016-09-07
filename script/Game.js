@@ -4,8 +4,10 @@
  * @param {HTMLCanvasElement} canvas - Canvas for displaying the game
  * @param {HTMLCanvasElement} instructions - Elemement for displaying game instructions
  * @param {HTMLCanvasElement} narrative - Elemement for displaying game narrative
+ * @param {HTMLCanvasElement} score - Elemement for displaying game's current score
+ * @param {HTMLCanvasElement} highScore - Elemement for displaying game's high score
  */
-function Game(canvas, instructions, narrative)
+function Game(canvas, instructions, narrative, score, highScore)
 {
   this.canvas = canvas;
   this.context = canvas.getContext("2d");
@@ -42,6 +44,7 @@ function Game(canvas, instructions, narrative)
     this.stars.push({ x: point.x, y: point.y, opacity: opacity });
   }
 
+  this.narrative = narrative;
   this.instructions = instructions;
   this.isInTutorial = true;
   this.currentTutorialStage = 0;
@@ -49,6 +52,11 @@ function Game(canvas, instructions, narrative)
   this.hasShot = false;
   this.hasGlitched = false;
   this.hasGlitchedShip = false;
+
+  this.currentScoreDisplay = score;
+  this.highScoreDisplay = highScore;
+  this.currentScore = 0;
+  this.highScore = 0;
 }
 
 /**
@@ -102,6 +110,11 @@ Game.prototype.update = function()
 
     if(enemy.isDestroyed())
     {
+      if(enemy.lastAttackerId === self.player.id)
+      {
+        self.increaseScore(100);
+      }
+
       // Destroy enemy
       self.enemies[enemyIndex] = null;
       self.explosions.push(new Explosion(enemy.x, enemy.y, enemy.bodyColor));
@@ -131,6 +144,7 @@ Game.prototype.update = function()
       self.recenterMap();
 
       self.hasGlitchedShip = true;
+      self.increaseScore(1000);
       return;
     }
 
@@ -318,7 +332,13 @@ Game.prototype.handleBulletInteraction = function(bullet, entity, bulletIndex) {
 
   if(entity.intersects(bullet.getBoundingCircle()))
   {
+    if(bullet.sourceId === this.player.id)
+    {
+      this.increaseScore(10);
+    }
+
     entity.damage(bullet.damage);
+    entity.lastAttackerId = bullet.sourceId;
     this.bullets[bulletIndex] = null;
   }
 
@@ -527,29 +547,45 @@ Game.prototype.updateTutorial = function()
   if(this.currentTutorialStage === 0 && this.hasMoved)
   {
     this.currentTutorialStage++;
-    narrative.innerText = 'we must destroy';
-    instructions.innerText = 'shoot with [X]';
+    this.narrative.innerText = 'we must destroy';
+    this.instructions.innerText = 'shoot with [X]';
   }
 
   if(this.currentTutorialStage === 1 && this.hasShot)
   {
     this.currentTutorialStage++;
-    narrative.innerText = 'we must conquer';
-    instructions.innerText = 'glitch with [Z]';
+    this.narrative.innerText = 'we must conquer';
+    this.instructions.innerText = 'glitch with [Z]';
   }
 
   if(this.currentTutorialStage === 2 && this.hasGlitched)
   {
     this.currentTutorialStage++;
-    narrative.innerText = 'we must control';
-    instructions.innerText = 'glitch a weak ship to take control';
+    this.narrative.innerText = 'we must control';
+    this.instructions.innerText = 'glitch a weak ship to take control';
   }
 
   if(this.currentTutorialStage === 3 && this.hasGlitchedShip)
   {
     this.isInTutorial = false;
-    instructions.parentNode.setAttribute('style', 'opacity: 0');
+    this.instructions.parentNode.setAttribute('style', 'display: none');
   }
+}
+
+Game.prototype.increaseScore = function(value) {
+
+  // Increase score
+  this.currentScore += value;
+
+  if(this.currentScore > this.highScore)
+  {
+    this.highScore = this.currentScore;
+  }
+
+  // Display score
+  this.currentScoreDisplay.innerText = this.currentScore;
+  this.highScoreDisplay.innerText = this.highScore;
+
 }
 
 /**

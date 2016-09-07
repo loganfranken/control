@@ -84,6 +84,7 @@ function Ship(props) {
   this.bulletRadius = props.bulletRadius;
   this.bulletDamage = props.bulletDamage;
   this.currentBulletDelay = 0;
+  this.lastAttackerId = 0;
 
   // Health
   this.canBeDestroyed = props.canBeDestroyed;

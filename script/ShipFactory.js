@@ -10,7 +10,7 @@ ShipFactory.generateRandomShip = function(x, y)
   var width = Utility.getRandomInt(20, 40);
   var height = Utility.getRandomInt(20, 40);
 
-  var speed = Utility.getRandom(2, 6);
+  var speed = Utility.getRandom(3, 8);
   var rotationSpeed = Utility.getRandomInt(1, 3);
   var rotationDegree = Utility.getRandomInt(0, 360);
 

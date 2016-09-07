@@ -36,3 +36,20 @@ canvas:focus
   font-size: 4em;
   text-transform: uppercase;
 }
+
+.score-wrapper
+{
+  color: #FFF;
+  margin-top: 40px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.score
+{
+  font-family: monospace;
+  margin: 0 auto;
+  text-align: right;
+  width: 750px;
+}
