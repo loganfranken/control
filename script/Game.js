@@ -591,22 +591,22 @@ Game.prototype.updateTutorial = function()
   if(this.currentTutorialStage === 0 && this.hasMoved)
   {
     this.currentTutorialStage++;
-    this.narrative.innerText = 'we must destroy';
-    this.instructions.innerText = 'shoot with [X]';
+    this.narrative.innerText = 'This is your first ship';
+    this.instructions.innerText = '|| shoot with [X] ||';
   }
 
   if(this.currentTutorialStage === 1 && this.hasShot)
   {
     this.currentTutorialStage++;
-    this.narrative.innerText = 'we must conquer';
-    this.instructions.innerText = 'glitch with [Z]';
+    this.narrative.innerText = 'Only a vessel';
+    this.instructions.innerText = '|| glitch with [Z] ||';
   }
 
   if(this.currentTutorialStage === 2 && this.hasGlitched)
   {
     this.currentTutorialStage++;
-    this.narrative.innerText = 'we must control';
-    this.instructions.innerText = 'glitch a weak ship to take control';
+    this.narrative.innerText = 'We must spread';
+    this.instructions.innerText = '|| glitch a weak ship to take control ||';
   }
 
   if(this.currentTutorialStage === 3 && this.hasGlitchedShip)
