@@ -87,7 +87,7 @@ function Ship(props) {
   this.lastAttackerId = 0;
 
   // Health
-  this.canBeDestroyed = props.canBeDestroyed;
+  this.isTutorialShip = props.isTutorialShip;
   this.maxHealth = props.health;
   this.health = props.health;
 
@@ -224,7 +224,7 @@ Ship.prototype.update = function() {
   }
 
   // Update weak status
-  this.isWeak = (this.health/this.maxHealth <= 0.3);
+  this.isWeak = (this.health/this.maxHealth <= 0.5);
 
   var isBeingPushed = (this.pushSpeed > 0);
   var targetSpeed = isBeingPushed ? this.pushSpeed : this.speed;

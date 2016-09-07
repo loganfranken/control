@@ -10,8 +10,8 @@ ShipFactory.generateRandomShip = function(x, y)
   var width = Utility.getRandomInt(20, 40);
   var height = Utility.getRandomInt(20, 40);
 
-  var speed = Utility.getRandom(3, 8);
-  var rotationSpeed = Utility.getRandomInt(1, 3);
+  var speed = Utility.getRandom(3, 6);
+  var rotationSpeed = Utility.getRandomInt(2, 5);
   var rotationDegree = Utility.getRandomInt(0, 360);
 
   var bodyWidthFactor = Utility.getRandomInt(3, 8);
@@ -28,12 +28,10 @@ ShipFactory.generateRandomShip = function(x, y)
   var bulletRange = Utility.getRandomInt(80, 140);
   var bulletColor = Utility.getRandomColor();
   var bulletRadius = Utility.getRandomInt(2, 4);
-  var bulletDelay = Utility.getRandomInt(20, 50);
+  var bulletDelay = Utility.getRandomInt(10, 30);
   var bulletSpeed = speed * Utility.getRandom(1, 3);
 
   var health = Utility.getRandomInt(20, 50);
-
-  var behavior = Utility.getRandomInt(1, 3);
 
   var shipProps = {
 
@@ -63,8 +61,6 @@ ShipFactory.generateRandomShip = function(x, y)
     bulletDamage: bulletRadius,
 
     health: health,
-
-    behavior: behavior,
 
     isTutorialShip: false
 

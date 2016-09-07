@@ -177,7 +177,7 @@ Game.prototype.update = function()
       }
 
       // Update enemy/player sighting
-      if(enemy.behavior == ShipBehavior.Aggressive && enemy.isInSightRange(self.player.getBoundingCircle()))
+      if(enemy.isInSightRange(self.player.getBoundingCircle()))
       {
         enemy.target = self.player;
       }
@@ -211,18 +211,10 @@ Game.prototype.update = function()
 
     });
 
-    // Update enemy movement
-    if(enemy.behavior === ShipBehavior.Lazy)
-    {
-      enemy.moveForward();
-    }
-
-    if(enemy.behavior === ShipBehavior.Aggressive)
+    if(!enemy.isTutorialShip)
     {
       if(enemy.target != null)
       {
-        // If an enemy ship is aggressive and it has a target,
-        // make the enemy ship follow its target
         enemy.lookTowards(enemy.target.x, enemy.target.y);
         enemy.moveForward();
 
@@ -237,12 +229,6 @@ Game.prototype.update = function()
         // Otherwise, just make the ship move forward
         enemy.moveForward();
       }
-    }
-
-    if(self.player != null && enemy.behavior === ShipBehavior.Fearful)
-    {
-      enemy.lookAwayFrom(self.player.x, self.player.y);
-      enemy.moveForward();
     }
 
     // Update enemy/bullet interaction
@@ -312,9 +298,8 @@ Game.prototype.update = function()
   // Generate new enemies
   if(!self.isInTutorial && self.enemies.length < this.currentEnemyMax)
   {
-    var randomX = Utility.getRandomInt(-self.halfBoundarySize, self.halfBoundarySize);
-    var randomY = Utility.getRandomInt(-self.halfBoundarySize, self.halfBoundarySize);
-    self.enemies.push(ShipFactory.generateRandomShip(randomX, randomY));
+    var newEnemyPoint = Utility.getRandomPoint(0, 0, this.boundarySize);
+    self.enemies.push(ShipFactory.generateRandomShip(newEnemyPoint.x, newEnemyPoint.y));
   }
 
   // Increase difficulty
@@ -351,7 +336,7 @@ Game.prototype.handleCollision = function(entityA, entityB) {
   }
 
   // Push both the enemy and player ship backwards
-  var pushBackSpeed = (entityASpeed > entityBSpeed ? entityASpeed : entityBSpeed) * 1.5;
+  var pushBackSpeed = (entityASpeed > entityBSpeed ? entityASpeed : entityBSpeed) * 0.5;
   entityA.pushBackward(pushBackSpeed);
   entityB.pushBackward(pushBackSpeed);
 
@@ -394,24 +379,30 @@ Game.prototype.handleBulletInteraction = function(bullet, entity, bulletIndex) {
  */
 Game.prototype.handleBoundaryInteraction = function(entity)
 {
+  var hitBoundary = false;
+
   if(entity.x > this.halfBoundarySize)
   {
     entity.x = this.halfBoundarySize;
+    hitBoundary = true;
   }
 
   if(entity.x < -this.halfBoundarySize)
   {
     entity.x = -this.halfBoundarySize;
+    hitBoundary = true;
   }
 
   if(entity.y > this.halfBoundarySize)
   {
     entity.y = this.halfBoundarySize;
+    hitBoundary = true;
   }
 
   if(entity.y < -this.halfBoundarySize)
   {
     entity.y = -this.halfBoundarySize;
+    hitBoundary = true;
   }
 }
 
@@ -592,21 +583,21 @@ Game.prototype.updateTutorial = function()
   {
     this.currentTutorialStage++;
     this.narrative.innerText = 'This is your first ship';
-    this.instructions.innerText = '|| shoot with [X] ||';
+    this.instructions.innerText = 'Shoot with [X]';
   }
 
   if(this.currentTutorialStage === 1 && this.hasShot)
   {
     this.currentTutorialStage++;
     this.narrative.innerText = 'Only a vessel';
-    this.instructions.innerText = '|| glitch with [Z] ||';
+    this.instructions.innerText = 'Glitch with [Z]';
   }
 
   if(this.currentTutorialStage === 2 && this.hasGlitched)
   {
     this.currentTutorialStage++;
     this.narrative.innerText = 'We must spread';
-    this.instructions.innerText = '|| glitch a weak ship to take control ||';
+    this.instructions.innerText = 'Glitch a weak ship to take control';
   }
 
   if(this.currentTutorialStage === 3 && this.hasGlitchedShip)
@@ -707,9 +698,8 @@ Game.prototype.start = function()
 
   // Generate initial ship
   var ship = ShipFactory.generateRandomShip(-400, 0);
-  ship.behavior = ShipBehavior.None;
   ship.isTutorialShip = true;
-  ship.health *= 0.5;
+  ship.health *= 0.6;
 
   this.enemies.push(ship);
 
