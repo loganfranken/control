@@ -31,7 +31,7 @@ function Game(canvas, instructions, narrative, score, highScore)
   this.items = [];
   this.explosions = [];
 
-  this.boundarySize = 2000;
+  this.boundarySize = 1500;
   this.halfBoundarySize = (this.boundarySize/2);
 
   this.stars = [];
