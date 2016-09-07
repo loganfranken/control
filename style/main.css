@@ -53,3 +53,8 @@ canvas:focus
   text-align: right;
   width: 750px;
 }
+
+#high-score
+{
+  color: #FF0;
+}

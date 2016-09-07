@@ -139,10 +139,12 @@ Game.prototype.update = function()
         && enemy.canBeGlitched()
         && self.player.isInGlitchRange(enemyBoundingCircle))
     {
-      self.cachePlayerCoordinates();
+      // Trigger an explosion where the enemy ship is located
+      self.explosions.push(new Explosion(enemy.x, enemy.y, enemy.bodyColor));
 
-      // Trigger an explosion where the old ship was located
-      self.explosions.push(new Explosion(self.player.x, self.player.y, self.player.bodyColor));
+      // Move the enemy ship over the player
+      enemy.x = self.player.x;
+      enemy.y = self.player.y;
 
       // Remove the player's old ship and swap the player with the enemy
       self.player = enemy;
@@ -150,8 +152,6 @@ Game.prototype.update = function()
 
       // Reset the player's health
       self.player.health = self.player.maxHealth;
-
-      self.recenterMap();
 
       self.hasGlitchedShip = true;
       self.increaseScore(1000);
