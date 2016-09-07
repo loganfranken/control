@@ -53,6 +53,9 @@ function Game(canvas, instructions, narrative, score, highScore)
   this.hasGlitched = false;
   this.hasGlitchedShip = false;
 
+  this.startingEnemyMax = 3;
+  this.currentEnemyMax = this.startingEnemyMax;
+  this.enemyKillCount = 0;
   this.currentScoreDisplay = score;
   this.highScoreDisplay = highScore;
   this.currentScore = 0;
@@ -82,7 +85,11 @@ Game.prototype.update = function()
   // Update player destruction
   if(self.player != null && self.player.isDestroyed())
   {
-    self.explosions.push(new Explosion(self.player.x, self.player.y, self.player.bodyColor));
+    var playerExplosion = new Explosion(self.player.x, self.player.y, self.player.bodyColor);
+
+    playerExplosion.isPlayerExplosion = true;
+
+    self.explosions.push(playerExplosion);
     self.player = null;
   }
 
@@ -120,9 +127,10 @@ Game.prototype.update = function()
 
     if(enemy.isDestroyed())
     {
-      if(enemy.lastAttackerId === self.player.id)
+      if(self.player != null && enemy.lastAttackerId === self.player.id)
       {
         self.increaseScore(100);
+        self.enemyKillCount++;
       }
 
       // Destroy enemy
@@ -148,6 +156,7 @@ Game.prototype.update = function()
 
       // Remove the player's old ship and swap the player with the enemy
       self.player = enemy;
+      self.player.isTutorialShip = false;
       self.enemies[enemyIndex] = null;
 
       // Reset the player's health
@@ -155,6 +164,7 @@ Game.prototype.update = function()
 
       self.hasGlitchedShip = true;
       self.increaseScore(1000);
+      self.enemyKillCount++;
       return;
     }
 
@@ -282,6 +292,11 @@ Game.prototype.update = function()
     if(explosion.isFinished())
     {
       self.explosions[explosionIndex] = null;
+
+      if(explosion.isPlayerExplosion)
+      {
+        self.resetGame();
+      }
     }
 
   });
@@ -292,6 +307,20 @@ Game.prototype.update = function()
     self.cachePlayerCoordinates();
     self.handleBoundaryInteraction(self.player);
     self.recenterMap();
+  }
+
+  // Generate new enemies
+  if(!self.isInTutorial && self.enemies.length < this.currentEnemyMax)
+  {
+    var randomX = Utility.getRandomInt(-self.halfBoundarySize, self.halfBoundarySize);
+    var randomY = Utility.getRandomInt(-self.halfBoundarySize, self.halfBoundarySize);
+    self.enemies.push(ShipFactory.generateRandomShip(randomX, randomY));
+  }
+
+  // Increase difficulty
+  if(this.currentEnemyMax < this.enemyKillCount)
+  {
+    this.currentEnemyMax++;
   }
 
   // Condense the entity arrays, removing the nulls
@@ -335,6 +364,11 @@ Game.prototype.handleCollision = function(entityA, entityB) {
  */
 Game.prototype.handleBulletInteraction = function(bullet, entity, bulletIndex) {
 
+  if(entity == null)
+  {
+    return;
+  }
+
   if(bullet.sourceId === entity.id)
   {
     return;
@@ -342,7 +376,7 @@ Game.prototype.handleBulletInteraction = function(bullet, entity, bulletIndex) {
 
   if(entity.intersects(bullet.getBoundingCircle()))
   {
-    if(bullet.sourceId === this.player.id)
+    if(this.player != null && bullet.sourceId === this.player.id)
     {
       this.increaseScore(10);
     }
@@ -600,6 +634,28 @@ Game.prototype.increaseScore = function(value) {
   // Display score
   this.currentScoreDisplay.innerText = this.currentScore;
   this.highScoreDisplay.innerText = this.highScore;
+
+}
+
+/**
+ * Resets the game's state
+ */
+Game.prototype.resetGame = function() {
+
+  this.mapCenterX = 400;
+  this.mapCenterY = 300;
+  this.player = ShipFactory.generateRandomShip(0, 0);
+
+  this.bullets = [];
+  this.enemies = [];
+  this.items = [];
+  this.explosions = [];
+
+  this.currentEnemyMax = this.startingEnemyMax;
+  this.enemyKillCount = 0;
+  this.currentScore = 0;
+
+  this.increaseScore(0);
 
 }
 

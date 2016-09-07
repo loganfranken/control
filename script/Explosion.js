@@ -18,6 +18,8 @@ function Explosion(x, y, color) {
 
   this.color = color.replace('rgb', 'rgba').replace(')', ', x)');
 
+  this.isPlayerExplosion = false;
+
 }
 
 /**
