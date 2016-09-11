@@ -55,6 +55,7 @@ function Game(canvas, instructions, narrative, score, highScore)
 
   this.startingEnemyMax = 3;
   this.currentEnemyMax = this.startingEnemyMax;
+  this.finalEnemyMax = 20;
   this.enemyKillCount = 0;
   this.currentScoreDisplay = score;
   this.highScoreDisplay = highScore;
@@ -285,13 +286,14 @@ Game.prototype.update = function()
   if(!self.isInTutorial && self.enemies.length < this.currentEnemyMax)
   {
     var newEnemyPoint = Utility.getRandomPoint(0, 0, this.halfBoundarySize);
-    self.enemies.push(ShipFactory.generateRandomShip(newEnemyPoint.x, newEnemyPoint.y));
+    var newEnemyShip = ShipFactory.generateRandomShip(newEnemyPoint.x, newEnemyPoint.y);
+    self.enemies.push(newEnemyShip);
   }
 
   // Increase difficulty
-  if(this.currentEnemyMax < this.enemyKillCount)
+  if(self.currentEnemyMax < self.enemyKillCount && self.currentEnemyMax < self.finalEnemyMax)
   {
-    this.currentEnemyMax++;
+    self.currentEnemyMax++;
   }
 
   // Condense the entity arrays, removing the nulls
