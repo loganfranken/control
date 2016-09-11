@@ -54,7 +54,7 @@ canvas:focus
   width: 750px;
 }
 
-#high-score
+#high-score, #narrative
 {
   color: #FF0;
 }
