@@ -605,22 +605,22 @@ Game.prototype.updateTutorial = function()
   if(this.currentTutorialStage === 0 && this.hasMoved)
   {
     this.currentTutorialStage++;
-    this.narrative.innerText = 'This is your first ship';
-    this.instructions.innerText = 'Shoot with [X]';
+    this.narrative.innerHTML = 'This is your first ship';
+    this.instructions.innerHTML = 'Shoot with [X]';
   }
 
   if(this.currentTutorialStage === 1 && this.hasShot)
   {
     this.currentTutorialStage++;
-    this.narrative.innerText = 'Only a vessel';
-    this.instructions.innerText = 'Glitch with [Z]';
+    this.narrative.innerHTML = 'Only a vessel';
+    this.instructions.innerHTML = 'Glitch with [Z]';
   }
 
   if(this.currentTutorialStage === 2 && this.hasGlitched)
   {
     this.currentTutorialStage++;
-    this.narrative.innerText = 'We must spread';
-    this.instructions.innerText = 'Glitch a weak ship to take control';
+    this.narrative.innerHTML = 'We must spread';
+    this.instructions.innerHTML = 'Glitch a weak ship to take control';
   }
 
   if(this.currentTutorialStage === 3 && this.hasGlitchedShip)
@@ -646,8 +646,8 @@ Game.prototype.increaseScore = function(value) {
   }
 
   // Display score
-  this.currentScoreDisplay.innerText = this.currentScore;
-  this.highScoreDisplay.innerText = this.highScore;
+  this.currentScoreDisplay.innerHTML = this.currentScore;
+  this.highScoreDisplay.innerHTML = this.highScore;
 
 }
 
