@@ -153,6 +153,7 @@ Game.prototype.update = function()
       // Move the enemy ship over the player
       enemy.x = self.player.x;
       enemy.y = self.player.y;
+      enemy.rotationDegree = self.player.rotationDegree;
 
       // Remove the player's old ship and swap the player with the enemy
       self.player = enemy;
