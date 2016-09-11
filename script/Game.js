@@ -306,6 +306,11 @@ Game.prototype.update = function()
  */
 Game.prototype.updateEnemyShipBehavior = function(enemy, overrideTarget) {
 
+  if(enemy.isTutorialShip)
+  {
+    return;
+  }
+
   if(enemy.target === null || overrideTarget)
   {
     enemy.target = Utility.getRandomPoint(0, 0, this.halfBoundarySize);
@@ -347,8 +352,8 @@ Game.prototype.handleCollision = function(entityA, entityB) {
   // Damage both the player and enemy ship w/ the difference in their speeds
   if(!entityA.isTutorialShip && !entityB.isTutorialShip)
   {
-    entityA.damage(collisionDamage * 0.2);
-    entityB.damage(collisionDamage * 0.2);
+    entityA.damage(collisionDamage);
+    entityB.damage(collisionDamage);
   }
 
   // Push both the enemy and player ship backwards
