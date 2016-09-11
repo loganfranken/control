@@ -1,0 +1,4 @@
+dist
+node_modules
+script/bundle.min.js
+style/main.min.css

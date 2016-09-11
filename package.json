@@ -1,0 +1,30 @@
+{
+  "name": "control",
+  "version": "1.0.0",
+  "description": "Entry for the 2016 JS13K competition",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loganfranken/control.git"
+  },
+  "author": "Logan Franken <loganfranken@gmail.com> (http://www.loganfranken.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/loganfranken/control/issues"
+  },
+  "homepage": "https://github.com/loganfranken/control#readme",
+  "devDependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssmin": "^0.1.7",
+    "gulp-htmlmin": "^2.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-uglify": "^2.0.0",
+    "gulp-zip": "^3.2.0"
+  }
+}
