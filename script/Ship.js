@@ -100,6 +100,9 @@ function Ship(props) {
   this.animMaxHitCounter = 5;
   this.animHitCounter = 0;
 
+  // Target
+  this.target = null;
+
 }
 
 /**
@@ -322,26 +325,16 @@ Ship.prototype.shoot = function() {
 };
 
 /**
- * Rotates the ship to face the specified point
+ * Rotates the ship to either look towards the given coordinates
  * @param {integer} x - X-coordinate to look at
  * @param {integer} y - Y-coordinate to look at
  */
 Ship.prototype.lookTowards = function(x, y) {
-  this.look(x, y, -1);
-}
-
-/**
- * Rotates the ship to either look towards or away from the given coordinates
- * @param {integer} x - X-coordinate to look at
- * @param {integer} y - Y-coordinate to look at
- * @param {integer} direction - +1 (look away) or -1 (look towards)
- */
-Ship.prototype.look = function(x, y, direction) {
 
   var targetX = this.x - x;
   var targetY = this.y - y;
 
-  var targetRotationDegree = (direction) * Math.atan2(targetX, targetY) * (180/Math.PI);
+  var targetRotationDegree = -Math.atan2(targetX, targetY) * (180/Math.PI);
 
   if(Utility.within(this.rotationDegree, targetRotationDegree, 2))
   {

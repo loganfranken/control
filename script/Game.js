@@ -199,24 +199,22 @@ Game.prototype.update = function()
 
     });
 
+    // Update enemy movement
     if(!enemy.isTutorialShip)
     {
-      var randomIndex = Utility.getRandomInt(0, 10);
-
-      // Rotate the ship
-      if(randomIndex === 0)
+      if(enemy.target === null)
       {
-        enemy.rotateClockwise(enemy.rotationSpeed);
+        enemy.target = Utility.getRandomPoint(0, 0, self.halfBoundarySize);
       }
 
-      // Move the ship
-      enemy.moveForward();
-
-      // Fire the ship's bullets
-      if(randomIndex%2 === 0 && enemy.canShoot())
+      if(Utility.within(enemy.x, enemy.target.x, 50) && Utility.within(enemy.y, enemy.target.y, 50))
       {
-        self.bullets.push(enemy.getBullet());
-        enemy.shoot();
+        enemy.target = null;
+      }
+      else
+      {
+        enemy.lookTowards(enemy.target.x, enemy.target.y);
+        enemy.moveForward();
       }
     }
 
