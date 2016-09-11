@@ -174,6 +174,7 @@ Game.prototype.update = function()
       if(self.player.intersects(enemyBoundingCircle))
       {
         self.handleCollision(self.player, enemy);
+        self.updateEnemyShipBehavior(enemy, true);
       }
     }
 
@@ -190,6 +191,8 @@ Game.prototype.update = function()
       if(enemy.intersects(otherEnemyBoundingCircle))
       {
         self.handleCollision(otherEnemy, enemy);
+        self.updateEnemyShipBehavior(otherEnemy, true);
+        self.updateEnemyShipBehavior(enemy, true);
       }
 
       if(enemy.target != null)
@@ -202,29 +205,7 @@ Game.prototype.update = function()
     // Update enemy movement
     if(!enemy.isTutorialShip)
     {
-      if(enemy.target === null)
-      {
-        enemy.target = Utility.getRandomPoint(0, 0, self.halfBoundarySize);
-      }
-
-      if(Utility.within(enemy.x, enemy.target.x, 50) && Utility.within(enemy.y, enemy.target.y, 50))
-      {
-        enemy.target = null;
-      }
-      else
-      {
-        enemy.lookTowards(enemy.target.x, enemy.target.y);
-        enemy.moveForward();
-      }
-
-      // Fire the ship's bullets
-      var shootIndex = Utility.getRandomInt(0, enemy.aggressiveness);
-
-      if(shootIndex === 0 && enemy.canShoot())
-      {
-        self.bullets.push(enemy.getBullet());
-        enemy.shoot();
-      }
+      self.updateEnemyShipBehavior(enemy, false);
     }
 
     // Update enemy/bullet interaction
@@ -233,7 +214,12 @@ Game.prototype.update = function()
     });
 
     // Update the enemy's interaction with the game boundary
-    self.handleBoundaryInteraction(enemy);
+    var hitBoundary = self.handleBoundaryInteraction(enemy);
+
+    if(hitBoundary)
+    {
+      self.updateEnemyShipBehavior(enemy, true);
+    }
 
   });
 
@@ -313,6 +299,39 @@ Game.prototype.update = function()
 }
 
 /**
+ * Updates enemy ship behavior
+ * @param {object} enemy - Enemy ship to update
+ * @param {boolean} overrideTarget - Whether or not to override the current target
+ */
+Game.prototype.updateEnemyShipBehavior = function(enemy, overrideTarget) {
+
+  if(enemy.target === null || overrideTarget)
+  {
+    enemy.target = Utility.getRandomPoint(0, 0, this.halfBoundarySize);
+  }
+
+  if(Utility.within(enemy.x, enemy.target.x, 50) && Utility.within(enemy.y, enemy.target.y, 50))
+  {
+    enemy.target = null;
+  }
+  else
+  {
+    enemy.lookTowards(enemy.target.x, enemy.target.y);
+    enemy.moveForward();
+  }
+
+  // Fire the ship's bullets
+  var shootIndex = Utility.getRandomInt(0, enemy.aggressiveness);
+
+  if(shootIndex === 0 && enemy.canShoot())
+  {
+    this.bullets.push(enemy.getBullet());
+    enemy.shoot();
+  }
+
+}
+
+/**
  * Handle a collision between two ships
  * @param {object} entityA - First entity involved in the collision
  * @param {object} entityB - Second entity involved in the collision
@@ -375,25 +394,33 @@ Game.prototype.handleBulletInteraction = function(bullet, entity, bulletIndex) {
  */
 Game.prototype.handleBoundaryInteraction = function(entity)
 {
+  var hitBoundary = false;
+
   if(entity.x > this.halfBoundarySize)
   {
     entity.x = this.halfBoundarySize;
+    hitBoundary = true;
   }
 
   if(entity.x < -this.halfBoundarySize)
   {
     entity.x = -this.halfBoundarySize;
+    hitBoundary = true;
   }
 
   if(entity.y > this.halfBoundarySize)
   {
     entity.y = this.halfBoundarySize;
+    hitBoundary = true;
   }
 
   if(entity.y < -this.halfBoundarySize)
   {
     entity.y = -this.halfBoundarySize;
+    hitBoundary = true;
   }
+
+  return hitBoundary;
 }
 
 /**
