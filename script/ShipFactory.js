@@ -33,6 +33,8 @@ ShipFactory.generateRandomShip = function(x, y)
 
   var health = Utility.getRandomInt(20, 50);
 
+  var aggressiveness = Utility.getRandomInt(2, 100);
+
   var shipProps = {
 
     x: x,
@@ -62,7 +64,8 @@ ShipFactory.generateRandomShip = function(x, y)
 
     health: health,
 
-    isTutorialShip: false
+    isTutorialShip: false,
+    aggressiveness: aggressiveness
 
   };
 

@@ -216,6 +216,15 @@ Game.prototype.update = function()
         enemy.lookTowards(enemy.target.x, enemy.target.y);
         enemy.moveForward();
       }
+
+      // Fire the ship's bullets
+      var shootIndex = Utility.getRandomInt(0, enemy.aggressiveness);
+
+      if(shootIndex === 0 && enemy.canShoot())
+      {
+        self.bullets.push(enemy.getBullet());
+        enemy.shoot();
+      }
     }
 
     // Update enemy/bullet interaction

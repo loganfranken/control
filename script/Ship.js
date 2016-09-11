@@ -100,8 +100,9 @@ function Ship(props) {
   this.animMaxHitCounter = 5;
   this.animHitCounter = 0;
 
-  // Target
+  // Enemy Behavior
   this.target = null;
+  this.aggressiveness = props.aggressiveness;
 
 }
 
