@@ -31,7 +31,7 @@ ShipFactory.generateRandomShip = function(x, y)
   var bulletDelay = Utility.getRandomInt(10, 30);
   var bulletSpeed = speed * Utility.getRandom(1, 3);
 
-  var health = Utility.getRandomInt(20, 50);
+  var health = Utility.getRandomInt(20, 40);
 
   var aggressiveness = Utility.getRandomInt(2, 100);
 

@@ -62,11 +62,14 @@ function Game(canvas, instructions, narrative, score, highScore)
   this.highScore = 0;
 
   // Retrieve the high score from cache
-  var cachedHighScore = localStorage.getItem('highScore');
-
-  if(cachedHighScore)
+  if(window.localStorage)
   {
-    this.highScore = cachedHighScore;
+    var cachedHighScore = window.localStorage.getItem('highScore');
+
+    if(cachedHighScore)
+    {
+      this.highScore = cachedHighScore;
+    }
   }
 
   this.increaseScore(0);
@@ -642,7 +645,11 @@ Game.prototype.increaseScore = function(value) {
   if(this.currentScore > this.highScore)
   {
     this.highScore = this.currentScore;
-    window.localStorage.setItem('highScore', this.highScore);
+
+    if(window.localStorage)
+    {
+      window.localStorage.setItem('highScore', this.highScore);
+    }
   }
 
   // Display score
